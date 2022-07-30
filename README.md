@@ -26,7 +26,7 @@ Availability of each depends on weather data source.
 
 All data elements are available to automation routines, with the exception of Summary.
 #### Current Conditions
-* Temerature
+* Temperature
 * Humidity
 * Dew Point
 * Precipitation Intensity
