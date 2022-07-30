@@ -1,6 +1,6 @@
 # edgeWeather
 ## Overview
-This SmartThings Edge driver provides weather data from select weather data sources (currently US Government & Dark Sky).  It requires no SmartApp, however it does require either my **Edge Bridge Server** or a general-purpose Proxy server[^1] running on a computer on your network.  This provides the linkage for the Edge driver to reach internet endpoints which otherwise are not available to Edge drivers.  
+This SmartThings Edge driver provides weather data from select weather data sources (currently US Government & Dark Sky).  It requires no SmartApp, however it does require either my **Edge Bridge Server** or a standard Proxy server[^1] running on a computer on your network.  This provides the linkage for the Edge driver to reach internet endpoints which otherwise are not available to Edge drivers.  
 
 [^1]: Due to a current restriction in the Edge platform implementation, reaching **https**-based addresses is not supported using a standard proxy server.  If the weather data source is only available via https and not http, then my Edge Bridge Server must be used.
 
@@ -65,14 +65,14 @@ The complete URL to retrieve the weather forecast.  If the forecast data is cont
 * leave as 'xxxxx' for Dark Sky
 
 #### Proxy Server Address
-LAN address of either a standard Proxy server or the Edge Bridge Server.
+LAN address of either a standard Proxy server or the Edge Bridge Server[^1].
 * Must be in the form: http://<IP address>:<port number>
 * HTTPS is not currently supported
 ##### Example
 * http://192.168.1.150:8088
 
 #### Proxy Type
-Choose either 'Standard Proxy Server' or 'Edge Bridge Server'
+Choose either 'Standard Proxy Server'[^1] or 'Edge Bridge Server'
 
 #### Periodic Refresh
 Use this setting to enable or disable automatic refresh feature
