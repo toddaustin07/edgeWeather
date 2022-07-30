@@ -66,7 +66,7 @@ The complete URL to retrieve the weather forecast.  If the forecast data is cont
 
 #### Proxy Server Address
 LAN address of either a standard Proxy server or the Edge Bridge Server[^1].
-* Must be in the form: http://<IP address>:<port number>
+* Must be in the form: http://\<IP address\>:\<port number\>
 * HTTPS is not currently supported
 ##### Example
 * http://192.168.1.150:8088
