@@ -1,12 +1,12 @@
 # edgeWeather
 ## Overview
-This SmartThings Edge driver provides weather data from select weather data sources (currently US Government & Dark Sky).  It requires no SmartApp, however it does require either my Edge Bridge Server or a Proxy Server* running on a computer on your network.  This provides the linkage for the Edge driver to reach internet endpoints which otherwise are not available to Edge drivers.  
+This SmartThings Edge driver provides weather data from select weather data sources (currently US Government & Dark Sky).  It requires no SmartApp, however it does require either my **Edge Bridge Server** or a general Proxy server[^1] running on a computer on your network.  This provides the linkage for the Edge driver to reach internet endpoints which otherwise are not available to Edge drivers.  
 
-Currently the driver provides 2 options for weather data, however it has been designed to be able to easily add more sources.  Please request them in the SmartThings community or in the Issues tab here in Github.  Provide working URLs for current data and forecast that I can use to test.
-
-\* Due to a current restriction in the Edge platform implementation, reaching **https**-based addresses is not supported using a standard proxy server.  If the weather data source is only available via https and not http, then my Edge Bridge Server must be used.
+[^1]: Due to a current restriction in the Edge platform implementation, reaching **https**-based addresses is not supported using a standard proxy server.  If the weather data source is only available via https and not http, then my Edge Bridge Server must be used.
 
 The [Edge Bridge Server](https://github.com/toddaustin07/edgebridge) is a simple program you can download and run on any Windows, Linux, or Mac computer.  It requires no complicated setup. Just run it on an always-on computer with internet access and that's it.
+
+Currently the driver provides 2 options for weather data, however it has been designed to be able to easily add more sources.  Please request them in the SmartThings community or in the Issues tab here in Github.  Provide working URLs for current data and forecast that I can use to test; [email](mailto:rpi.smartthings@gmail.com) them to me if they contain personal account data.
 
 ## Pre-requisites
 * SmartThings hub that supports Edge
