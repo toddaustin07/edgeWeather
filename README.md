@@ -51,7 +51,7 @@ Choose US Gov or Dark Sky
 The complete URL to retrieve the current weather conditions.
 
 * Must be in the form: http(s)://<...>
-* Must include any account tokens or desired parameters
+* Must include any required account tokens or parameters
 ##### Examples
 * http://api.weather.gov/stations/KBAZ/observations/latest
 * https://api.darksky.net/forecast/\<usertoken\>/<latitude>,<longitude>?units=si&exclude=minutely,hourly
