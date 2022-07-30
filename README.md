@@ -16,11 +16,11 @@ The [Edge Bridge Server](https://github.com/toddaustin07/edgebridge) is a simple
 * Existing Dark Sky account if that is what you want to use (no new accounts can be created as it is being sunset); US Government weather does not require an account
 
 ## Features
-### Configurable 
-* Weather data source
+
+* Select weather data source
 * Separate weather data URLs for current weather conditions and forecast
 * Automatically refresh on a given interval
-* Displayed wind speed units: m/sec, knots, km/h, mph
+* Choice of displayed wind speed units: m/sec, knots, km/h, mph
 ### Data Elements
 Availability of each depends on weather data source.
 
