@@ -17,10 +17,12 @@ Currently the driver provides 2 options for weather data, however it has been de
 
 ### Edge Bridge Server
 
-Download the Edge Bridge Server that meets your needs:
+Download and run the Edge Bridge Server that meets your needs:
 
 [Windows computer](https://github.com/toddaustin07/edgebridge/blob/main/edgebridge.exe)
+
 [Linux or Mac (Python 3.x required)](https://github.com/toddaustin07/edgebridge/blob/main/edgebridge.py)
+
 [Raspberry Pi](https://github.com/toddaustin07/edgebridge/blob/main/edgebridge4pi)
 
 ## Features
