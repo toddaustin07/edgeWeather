@@ -115,6 +115,6 @@ Forecast data shown for US Gov sources is always for the next day.  For Dark Sky
 Tap the **Refresh** button at any time to update the weather data, or use the Periodic Refresh option in device Settings to automatically update.
 
 #### Routines
-All data elements except Summary are available to include in an **IF** portion of an automation routine
+All data elements except Summary are available to include in an **IF** portion of an automation routine.
 
 There are no **THEN** actions you can perform on the weather device.
