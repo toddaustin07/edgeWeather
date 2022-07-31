@@ -11,8 +11,8 @@ Currently the driver provides 2 options for weather data, however it has been de
 ## Pre-requisites
 * SmartThings hub that supports Edge
 * SmartThings ID
-* Edge Bridge Server or standard Proxy server (see caveat above)
-* A computer on your local network to run the Edge Bridge Server or Proxy server
+* An always-on computer on your local network with internet access
+* Edge Bridge Server or standard Proxy server[^1]
 * Existing Dark Sky account if that is what you want to use (no new accounts can be created as it is being sunset); US Government weather does not require an account
 
 ### Edge Bridge Server
