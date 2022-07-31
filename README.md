@@ -105,8 +105,14 @@ Set this value to the wind speed units that is received from the weather data so
 Set this value to the wind speed units that you want to use for your location (m/sec, knots, km/hr, mph)
 
 ### Usage
+#### Control screen
 After making any Settings changes, be sure to tap the **Refresh** button on the device Controls screen.
 
 Any fields that are blank or have 0 value may be due to no data available for that element in the received data.
 
 Forecast data shown for US Gov sources is always for the next day.  For Dark Sky sources, the forecast shown is for the next time period (morning/day/evening/overnight/etc).  This is arbitrary and may become a configurable setting in the future.
+
+#### Routines
+All data elements except Summary are available to include in an **IF** portion of an automation routine
+
+There are no **THEN** actions you can perform on the weather device.
