@@ -70,7 +70,7 @@ The complete URL to retrieve the current weather conditions.
 #### Weather Forecast URL
 The complete URL to retrieve the weather forecast.  If the forecast data is contained in the *Current Weather URL*, then this can be left to 'xxxxx'.
 
-* Must be in the form: http(s)://<...>
+* If provided, must be in the form: http(s)://<...>
 * Must include any required account tokens or parameters
 ##### Examples
 * http://api.weather.gov/gridpoints/EWX/142,70/forecast
