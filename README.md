@@ -53,7 +53,7 @@ All data elements are available to automation routines, with the exception of Su
 * Probability of Precipitation
 * Summary
 ## Installation & Configuration
-The driver is currently available on my [test channel](https://bestow-regional.api.smartthings.com/invite/Q1jP7BqnNNlL).  Enroll your hub and select edgeWeather from the list of drivers available to install.
+The driver is currently available on my [test channel](https://bestow-regional.api.smartthings.com/invite/Q1jP7BqnNNlL).  Enroll your hub and select **Edge Weather V1** from the list of drivers available to install.
 When the driver is available on your hub, initiate an *Add device / Scan for nearby devices* from the SmartThings mobile app.  A new device will be created and found in your *No room assigned* room.  Open the device to the device *Settings* screen (three vertical dot menu in upper right of Controls screen).
 
 ### Settings
