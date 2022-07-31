@@ -15,6 +15,14 @@ Currently the driver provides 2 options for weather data, however it has been de
 * A computer on your local network to run the Edge Bridge Server or Proxy server
 * Existing Dark Sky account if that is what you want to use (no new accounts can be created as it is being sunset); US Government weather does not require an account
 
+### Edge Bridge Server
+
+Download the Edge Bridge Server that meets your needs:
+
+[Windows computer](https://github.com/toddaustin07/edgebridge/blob/main/edgebridge.exe)
+[Linux or Mac (Python 3.x required)](https://github.com/toddaustin07/edgebridge/blob/main/edgebridge.py)
+[Raspberry Pi](https://github.com/toddaustin07/edgebridge/blob/main/edgebridge4pi)
+
 ## Features
 
 * Select weather data source
