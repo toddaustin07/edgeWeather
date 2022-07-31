@@ -10,23 +10,23 @@ The [Edge Bridge Server](https://github.com/toddaustin07/edgebridge) is a simple
 ### Weather data sources
 Currently, the edgeWeather driver provides 2 options for weather data, however it has been designed to be able to easily add more sources.  Please request them in the SmartThings community or in the Issues tab here in Github.  Provide working URLs for current data and forecast that I can use to test; [email](mailto:rpi.smartthings@gmail.com) them to me if they contain personal account data.
 
-## Pre-requisites
+## Driver Pre-requisites
 * SmartThings hub that supports Edge
 * SmartThings ID
+* Existing Dark Sky account if that is what you want to use (no new accounts can be created as it is being sunset); US Government weather does not require an account
 * An always-on computer on your local network with internet access
 * Edge Bridge Server or standard Proxy server[^1]
-* Existing Dark Sky account if that is what you want to use (no new accounts can be created as it is being sunset); US Government weather does not require an account
 
-### Edge Bridge Server
+  Download and run the Edge Bridge Server that meets your needs:
 
-Download and run the Edge Bridge Server that meets your needs:
+    * [Windows computer](https://github.com/toddaustin07/edgebridge/blob/main/edgebridge.exe)
 
-[Windows computer](https://github.com/toddaustin07/edgebridge/blob/main/edgebridge.exe)
+    * [Linux or Mac (Python 3.x required)](https://github.com/toddaustin07/edgebridge/blob/main/edgebridge.py)
 
-[Linux or Mac (Python 3.x required)](https://github.com/toddaustin07/edgebridge/blob/main/edgebridge.py)
+    * [Raspberry Pi](https://github.com/toddaustin07/edgebridge/blob/main/edgebridge4pi)
 
-[Raspberry Pi](https://github.com/toddaustin07/edgebridge/blob/main/edgebridge4pi)
-
+  Alternatively, install a standard Proxy server such as [Privoxy](https://www.howtogeek.com/683971/how-to-use-a-raspberry-pi-as-a-proxy-server-with-privoxy/).
+  
 ## Features
 
 * Select weather data source
