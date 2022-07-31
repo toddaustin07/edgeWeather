@@ -6,7 +6,9 @@ This SmartThings Edge driver provides weather data from select weather data sour
 
 The [Edge Bridge Server](https://github.com/toddaustin07/edgebridge) is a simple program you can download and run on any Windows, Linux, or Mac computer.  It requires no complicated setup. Just run it on an always-on computer with internet access and that's it.  An additional benefit to having this running on your network is that it enables expanded options for Edge drivers (like this one!), as well as easy integration with local apps and devices.  See the [Github readme](https://github.com/toddaustin07/edgebridge/blob/main/README.md)  for more details.
 
-Currently the driver provides 2 options for weather data, however it has been designed to be able to easily add more sources.  Please request them in the SmartThings community or in the Issues tab here in Github.  Provide working URLs for current data and forecast that I can use to test; [email](mailto:rpi.smartthings@gmail.com) them to me if they contain personal account data.
+
+### Weather data sources
+Currently, the edgeWeather driver provides 2 options for weather data, however it has been designed to be able to easily add more sources.  Please request them in the SmartThings community or in the Issues tab here in Github.  Provide working URLs for current data and forecast that I can use to test; [email](mailto:rpi.smartthings@gmail.com) them to me if they contain personal account data.
 
 ## Pre-requisites
 * SmartThings hub that supports Edge
