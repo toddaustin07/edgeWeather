@@ -2,7 +2,7 @@
 ## Overview
 This SmartThings Edge driver provides weather data from select weather data sources (currently US Government & Dark Sky).  It requires no SmartApp, however it does require either my **Edge Bridge Server** or a standard Proxy server[^1] running on a computer on your network.  This provides the linkage for the Edge driver to reach internet endpoints which otherwise are not available to Edge drivers.  
 
-[^1]: Due to a restriction in the current Edge platform implementation, reaching **HTTPS**-based addresses is not supported using a standard proxy server.  If the weather data source is only available via https and not http, then my Edge Bridge Server must be used.
+[^1]: Due to a restriction in the current Edge platform implementation, reaching **HTTPS**-based addresses from Edge drivers is not supported using a standard proxy server.  Therefore, if the weather data source is only available via https and not http, then my Edge Bridge Server *must* be used.
 
 The [Edge Bridge Server](https://github.com/toddaustin07/edgebridge) is a simple program you can download and run on any Windows, Linux, or Mac computer.  It requires no complicated setup. Just run it on an always-on computer with internet access and that's it.
 
@@ -64,19 +64,19 @@ The complete URL to retrieve the current weather conditions.
 * Must include any required account tokens or parameters
 ##### Examples
 * http://api.weather.gov/stations/KBAZ/observations/latest
-* https://api.darksky.net/forecast/\<usertoken\>/<latitude>,<longitude>?units=si&exclude=minutely,hourly
+* https://api.darksky.net/forecast/<usertoken\>/<latitude\>,<longitude\>?units=si&exclude=minutely,hourly
 #### Weather Forecast URL
 The complete URL to retrieve the weather forecast.  If the forecast data is contained in the *Current Weather URL*, then this can be left to 'xxxxx'.
 
 * Must be in the form: http(s)://<...>
-* Must include any account tokens or desired parameters
+* Must include any required account tokens or parameters
 ##### Examples
 * http://api.weather.gov/gridpoints/EWX/142,70/forecast
 * leave as 'xxxxx' for Dark Sky
 
 #### Proxy Server Address
 LAN address of either a standard Proxy server or the Edge Bridge Server[^1].
-* Must be in the form: http://\<IP address\>:\<port number\>
+* Must be in the form: http://<IP address\>:<port number\>
 * HTTPS is not currently supported
 ##### Example
 * http://192.168.1.150:8088
