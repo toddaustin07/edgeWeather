@@ -1,0 +1,45 @@
+{
+    "dashboard": {
+        "states": [
+            {
+                "label": "{{cloudcover.value}}{{cloudcover.unit}}"
+            }
+        ],
+        "actions": []
+    },
+    "detailView": [
+        {
+            "label": "Cloud Cover",
+            "displayType": "slider",
+            "slider": {
+                "range": [
+                    0,
+                    100
+                ],
+                "unit": "cloudcover.unit",
+                "value": "cloudcover.value",
+                "valueType": "number"
+            }
+        }
+    ],
+    "automation": {
+        "conditions": [
+            {
+                "label": "Cloud Cover",
+                "displayType": "numberField",
+                "numberField": {
+                    "value": "cloudcover.value",
+                    "valueType": "number",
+                    "unit": "cloudcover.unit",
+                    "range": [
+                        0,
+                        100
+                    ]
+                }
+            }
+        ],
+        "actions": []
+    },
+    "id": "partyvoice23922.cloudcover",
+    "version": 1
+}

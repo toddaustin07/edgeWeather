@@ -1,0 +1,34 @@
+{
+    "id": "partyvoice23922.precip",
+    "version": 1,
+    "status": "proposed",
+    "name": "precip",
+    "ephemeral": false,
+    "attributes": {
+        "precip": {
+            "schema": {
+                "type": "object",
+                "properties": {
+                    "value": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 80
+                    },
+                    "unit": {
+                        "type": "string",
+                        "enum": [
+                            "mm/hr"
+                        ],
+                        "default": "mm/hr"
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "value"
+                ]
+            },
+            "enumCommands": []
+        }
+    },
+    "commands": {}
+}

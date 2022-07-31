@@ -1,0 +1,45 @@
+{
+    "dashboard": {
+        "states": [
+            {
+                "label": "{{dewpoint.value}}{{dewpoint.unit}}"
+            }
+        ],
+        "actions": []
+    },
+    "detailView": [
+        {
+            "label": "Dew Point",
+            "displayType": "slider",
+            "slider": {
+                "range": [
+                    -20,
+                    95
+                ],
+                "unit": "dewpoint.unit",
+                "value": "dewpoint.value",
+                "valueType": "number"
+            }
+        }
+    ],
+    "automation": {
+        "conditions": [
+            {
+                "label": "Dew Point",
+                "displayType": "numberField",
+                "numberField": {
+                    "value": "dewpoint.value",
+                    "valueType": "number",
+                    "unit": "dewpoint.unit",
+                    "range": [
+                        -20,
+                        95
+                    ]
+                }
+            }
+        ],
+        "actions": []
+    },
+    "id": "partyvoice23922.dewpoint",
+    "version": 1
+}

@@ -1,0 +1,45 @@
+{
+    "dashboard": {
+        "states": [
+            {
+                "label": "{{wSpeed.value}}{{wSpeed.unit}}"
+            }
+        ],
+        "actions": []
+    },
+    "detailView": [
+        {
+            "label": "Wind Speed",
+            "displayType": "slider",
+            "slider": {
+                "range": [
+                    0,
+                    80
+                ],
+                "unit": "wSpeed.unit",
+                "value": "wSpeed.value",
+                "valueType": "number"
+            }
+        }
+    ],
+    "automation": {
+        "conditions": [
+            {
+                "label": "Wind Speed",
+                "displayType": "numberField",
+                "numberField": {
+                    "value": "wSpeed.value",
+                    "valueType": "number",
+                    "unit": "wSpeed.unit",
+                    "range": [
+                        0,
+                        80
+                    ]
+                }
+            }
+        ],
+        "actions": []
+    },
+    "id": "partyvoice23922.windspeed5",
+    "version": 1
+}

@@ -1,0 +1,45 @@
+{
+    "dashboard": {
+        "states": [
+            {
+                "label": "{{pressure.value}}{{pressure.unit}}"
+            }
+        ],
+        "actions": []
+    },
+    "detailView": [
+        {
+            "label": "Atmospheric Pressure",
+            "displayType": "slider",
+            "slider": {
+                "range": [
+                    965,
+                    1040
+                ],
+                "unit": "pressure.unit",
+                "value": "pressure.value",
+                "valueType": "number"
+            }
+        }
+    ],
+    "automation": {
+        "conditions": [
+            {
+                "label": "Atmospheric Pressure",
+                "displayType": "numberField",
+                "numberField": {
+                    "value": "pressure.value",
+                    "valueType": "number",
+                    "unit": "pressure.unit",
+                    "range": [
+                        965,
+                        1040
+                    ]
+                }
+            }
+        ],
+        "actions": []
+    },
+    "id": "partyvoice23922.barometer",
+    "version": 1
+}

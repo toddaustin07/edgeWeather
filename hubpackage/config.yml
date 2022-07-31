@@ -1,0 +1,5 @@
+name: 'Edge Weather V1'
+packageKey: 'edgeWeather_V1'
+permissions:
+    lan: {}
+    discovery: {}

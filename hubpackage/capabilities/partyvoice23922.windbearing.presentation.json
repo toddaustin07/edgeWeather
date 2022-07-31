@@ -1,0 +1,45 @@
+{
+    "dashboard": {
+        "states": [
+            {
+                "label": "{{windbearing.value}}{{windbearing.unit}}"
+            }
+        ],
+        "actions": []
+    },
+    "detailView": [
+        {
+            "label": "Wind Bearing",
+            "displayType": "slider",
+            "slider": {
+                "range": [
+                    0,
+                    359
+                ],
+                "unit": "windbearing.unit",
+                "value": "windbearing.value",
+                "valueType": "number"
+            }
+        }
+    ],
+    "automation": {
+        "conditions": [
+            {
+                "label": "Wind Bearing",
+                "displayType": "numberField",
+                "numberField": {
+                    "value": "windbearing.value",
+                    "valueType": "number",
+                    "unit": "windbearing.unit",
+                    "range": [
+                        0,
+                        359
+                    ]
+                }
+            }
+        ],
+        "actions": []
+    },
+    "id": "partyvoice23922.windbearing",
+    "version": 1
+}

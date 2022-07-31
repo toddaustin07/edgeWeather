@@ -1,0 +1,33 @@
+{
+    "id": "partyvoice23922.barometer",
+    "version": 1,
+    "status": "proposed",
+    "name": "barometer",
+    "ephemeral": false,
+    "attributes": {
+        "pressure": {
+            "schema": {
+                "type": "object",
+                "properties": {
+                    "value": {
+                        "type": "number",
+                        "minimum": 850,
+                        "maximum": 1090
+                    },
+                    "unit": {
+                        "type": "string",
+                        "enum": [
+                            "mB"
+                        ]
+                    }
+                },
+                "additionalProperties": false,
+                "required": [
+                    "value"
+                ]
+            },
+            "enumCommands": []
+        }
+    },
+    "commands": {}
+}

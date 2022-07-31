@@ -1,0 +1,45 @@
+{
+    "dashboard": {
+        "states": [
+            {
+                "label": "{{precip.value}}{{precip.unit}}"
+            }
+        ],
+        "actions": []
+    },
+    "detailView": [
+        {
+            "label": "Precipitation Intensity",
+            "displayType": "slider",
+            "slider": {
+                "range": [
+                    0,
+                    50
+                ],
+                "unit": "precip.unit",
+                "value": "precip.value",
+                "valueType": "number"
+            }
+        }
+    ],
+    "automation": {
+        "conditions": [
+            {
+                "label": "Precipitation Intensity",
+                "displayType": "numberField",
+                "numberField": {
+                    "value": "precip.value",
+                    "valueType": "number",
+                    "unit": "precip.unit",
+                    "range": [
+                        0,
+                        50
+                    ]
+                }
+            }
+        ],
+        "actions": []
+    },
+    "id": "partyvoice23922.precip",
+    "version": 1
+}
