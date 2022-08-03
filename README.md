@@ -29,7 +29,7 @@ Currently, the edgeWeather driver provides 2 options for weather data, however i
 
     * [Raspberry Pi](https://github.com/toddaustin07/edgebridge/blob/main/edgebridge4pi)
       
-      Open a terminal window, navigate to the directory you downloaded the file to, and type './edgebridge4pi' and press enter.
+      Open a terminal window, navigate to the directory you downloaded the file to, and type 'chmod +x edgebridge4pi' and press enter (this makes the downloaded file executable).  Then to run it, type  './edgebridge4pi' and press enter.
 
   Alternatively, install a standard Proxy server such as [Privoxy](https://www.howtogeek.com/683971/how-to-use-a-raspberry-pi-as-a-proxy-server-with-privoxy/).
   
