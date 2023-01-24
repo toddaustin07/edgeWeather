@@ -14,64 +14,47 @@
 
   DESCRIPTION
   
-  SmartThings Edge Weather Driver (Darksky)
+  SmartThings Edge Weather Driver
 
 --]]
 
 -- Edge libraries
 local capabilities = require "st.capabilities"
 local Driver = require "st.driver"
-local cosock = require "cosock"                 -- just for time
+--local cosock = require "cosock"                 -- just for time
 local socket = require "cosock.socket"          -- just for time
-local json = require "dkjson"
 local log = require "log"
 
 -- Driver modules
-local comms = require "comms"
+local comms = require "comms"                   -- HTTP requests to fetch weather data
+local emitter = require "emitter"               -- Update SmartThings device attributes
+
+-- Weather source modules
 local _darksky = require "darksky"
 local _usgov = require "usgov"
+local _fmi = require "fmi"
+local _openweather = require "openweather"
+local _underground = require "underground"
 
 local wmodule = {
                   ['darksky'] = _darksky,
                   ['usgov'] = _usgov,
+                  ['fmi'] = _fmi,
+                  ['openw'] = _openweather,
+                  ['under'] = _underground,
                 }
 
 
 -- Module variables
 local thisDriver
 local initialized = false
-local periodic_timer
 
--- Custom capabilities (global for access by other modules)
-
-cap_summary = capabilities["partyvoice23922.summary"]
-cap_refresh = capabilities["partyvoice23922.refresh"]
-cap_precip = capabilities["partyvoice23922.precip"]
-cap_precipprob = capabilities["partyvoice23922.precipprob"]
-cap_barometer = capabilities["partyvoice23922.barometer"]
-cap_cloudcover = capabilities["partyvoice23922.cloudcover"]
-cap_dewpoint = capabilities["partyvoice23922.dewpoint"]
-cap_windspeed = capabilities["partyvoice23922.windspeed5"]
-cap_windbearing = capabilities["partyvoice23922.windbearing"]
+-- Custom capabilities
+local cap_createdev = capabilities["partyvoice23922.createanother"]
+local cap_refresh = capabilities["partyvoice23922.refresh"]
 
 
-local function disptable(table, tab, maxlevels, currlevel)
-
-	if not currlevel then; currlevel = 0; end
-  currlevel = currlevel + 1
-  for key, value in pairs(table) do
-    if type(key) ~= 'table' then
-      log.debug (tab .. '  ' .. key, value)
-    else
-      log.debug (tab .. '  ', key, value)
-    end
-    if (type(value) == 'table') and (currlevel < maxlevels) then
-      disptable(value, '  ' .. tab, maxlevels, currlevel)
-    end
-  end
-end
-
-
+-- Validate format of proxy IP:port address
 local function validate_address(lanAddress)
 
   local valid = true
@@ -118,58 +101,102 @@ local function validate_address(lanAddress)
       
 end
 
+
 -- Go to weather API and get data, then update SmartThings
--- this is also called by a period timer, so can't receive device parameter
-local function refresh_data()
+-- this may also be called by a periodic timer
+local function refresh_device(device)
 
-  local device_list = thisDriver:get_devices()
-  
-  
-  for _, device in ipairs(device_list) do
+  local status, weatherdata
+  local weathertable, pos, err
+  local baseurl = device.preferences.proxyaddr .. '/api/forward?url='
 
-    local status, weatherjson
-    local weathertable, pos, err
-    local baseurl = device.preferences.proxyaddr .. '/api/forward?url='
-  
 
-    -- Get Current observations
-    if device.preferences.url then
+  -- Get Current observations
+  if device.preferences.url then
+  
+    local request_url
+  
+    if device.preferences.proxytype ~= 'none' then
+  
+      request_url = wmodule[device.preferences.wsource].modify_current_url(device.preferences.url)
     
-      local request_url
       if device.preferences.proxytype == 'edge' then
-        request_url = baseurl .. device.preferences.url
-      else
-        request_url = device.preferences.url
+        request_url = baseurl .. request_url
       end
-      status, weatherjson = comms.issue_request(device, "GET", request_url)
+    else
+      request_url = device.preferences.url
+    end
+    
+    status, weatherdata = comms.issue_request(device, "GET", request_url)
 
-      if status == true then
-      
-        weathertable, pos, err = json.decode (weatherjson, 1, nil)
-        
-        wmodule[device.preferences.wsource].update_current(device, weathertable)
-        
+    if status == true then
+    
+      emitter.emit_current(device, wmodule[device.preferences.wsource].update_current(device, weatherdata))
+    
+    else
+      log.warn (string.format('Current data fetch failed for device %s', device.label))
+    end
+    
+    -- Get Forecast if different URL provided
+    if device.preferences.furl ~= 'xxxxx' then
+    
+      if device.preferences.proxytype == 'edge' then
+        request_url = baseurl .. device.preferences.furl
+      else
+        request_url = device.preferences.furl
       end
-      
-      -- Get Forecast if different URL
-      if device.preferences.furl ~= 'xxxxx' then
-      
-        if device.preferences.proxytype == 'edge' then
-          request_url = baseurl .. device.preferences.furl
-        else
-          request_url = device.preferences.furl
-        end
-        status, weatherjson = comms.issue_request(device, "GET", request_url)
-        if status == true then
-          weathertable, pos, err = json.decode (weatherjson, 1, nil)
-        end
-      end
-      
-      if status == true then
-        wmodule[device.preferences.wsource].update_forecast(device, weathertable)
-      end
+      status, weatherdata = comms.issue_request(device, "GET", request_url)
+    end
+    
+    if status == true then
+      emitter.emit_forecast(device, wmodule[device.preferences.wsource].update_forecast(device, weatherdata))
+    else
+      log.warn (string.format('Forecast data fetch failed for device %s', device.label))
     end
   end
+end
+
+
+local function create_device(driver)
+  
+  log.info("Creating Weather device")
+    
+  local MFG_NAME = 'SmartThings Community'
+  local VEND_LABEL = 'Edge Weather'
+  local MODEL = 'edgeweatherv1'
+  local ID = 'edge_weather' .. '_' .. socket.gettime()
+  local PROFILE = 'weather.v1g'
+
+  -- Create device
+
+  local create_device_msg = {
+                              type = "LAN",
+                              device_network_id = ID,
+                              label = VEND_LABEL,
+                              profile = PROFILE,
+                              manufacturer = MFG_NAME,
+                              model = MODEL,
+                              vendor_provided_label = VEND_LABEL,
+                            }
+                      
+  assert (driver:try_create_device(create_device_msg), "failed to create weather device")
+
+
+end
+
+
+-- Start automatic periodic refresh timer
+local function restart_timer(driver, device)
+
+  if device:get_field('periodictimer') then                                          -- just in case
+    driver:cancel_timer(device:get_field('periodictimer'))
+  end
+  local periodic_timer = driver:call_on_schedule(device.preferences.refreshrate * 60,
+    function()
+      refresh_device(device)
+    end, 'Refresh timer')
+  device:set_field('periodictimer', periodic_timer)
+
 end
 
 
@@ -177,60 +204,86 @@ end
 --										COMMAND HANDLERS
 -----------------------------------------------------------------------
 
-
 local function handle_refresh(driver, device, command)
 
-  log.info ('Refresh requested')
+  log.info ('Refresh requested; command:', command.command)
 
-  refresh_data()
-    
+  refresh_device(device)
+  
+end
+
+
+local function handle_createdev(driver, device, command)
+
+  create_device(driver)
+
 end
 
 ------------------------------------------------------------------------
---                REQUIRED EDGE DRIVER HANDLERS
+--                REQUIRED EDGE LIFECYCLE HANDLERS
 ------------------------------------------------------------------------
 
--- Lifecycle handler to initialize existing devices AND newly discovered devices
+-- Lifecycle handler to initialize existing devices
 local function device_init(driver, device)
   
   log.debug(device.id .. ": " .. device.device_network_id .. "> INITIALIZING")
 
+  device:try_update_metadata({profile='weather.v1g'})
+
   initialized = true
   
   if (validate_address(device.preferences.proxyaddr)) and device.preferences.url ~= 'xxxxx' then
-    refresh_data()
+    refresh_device(device)
   
     if device.preferences.autorefresh == 'enabled' then
-      if periodic_timer then                                          -- just in case
-        driver:cancel_timer(periodic_timer)
-      end
-      periodic_timer = driver:call_on_schedule(device.preferences.refreshrate * 60, refresh_data, 'Refresh timer')
+      restart_timer(driver, device)
     end
+  else
+    log.warn('Configuration required')
   end
 end
 
 
--- Called when device was just created in SmartThings
+-- Called when device was just created in SmartThings; all capability attributes MUST be initialized
 local function device_added (driver, device)
 
   log.info(device.id .. ": " .. device.device_network_id .. "> ADDED")
 
-  device:emit_component_event(device.profile.components.main, cap_summary.summary(' ', { visibility = { displayed = false } }))
-  device:emit_component_event(device.profile.components.main, capabilities.temperatureMeasurement.temperature({value = 20, unit='C'}))
-  device:emit_component_event(device.profile.components.main, capabilities.relativeHumidityMeasurement.humidity(50))
-  device:emit_component_event(device.profile.components.main, cap_precip.precip({value=0, unit='mm/hr'}))
-  device:emit_component_event(device.profile.components.main, cap_precipprob.probability({value=0, unit='%'}))
-  device:emit_component_event(device.profile.components.main, capabilities.precipitationSensor.precipitationIntensity('none'))
-  device:emit_component_event(device.profile.components.main, capabilities.atmosphericPressureMeasurement.atmosphericPressure(101))
-  device:emit_component_event(device.profile.components.main, cap_barometer.pressure({value=1010, unit='mB'}))
-  device:emit_component_event(device.profile.components.main, capabilities.ultravioletIndex.ultravioletIndex(0))
-  device:emit_component_event(device.profile.components.main, cap_cloudcover.cloudcover({value=50, unit='%'}))
-  device:emit_component_event(device.profile.components.main, cap_dewpoint.dewpoint(20))
-  device:emit_component_event(device.profile.components.main, cap_windspeed.wSpeed({value=0, unit='m/s'}))
-  device:emit_component_event(device.profile.components.main, cap_windbearing.windbearing(0))
-  
-  device:emit_component_event(device.profile.components.tomorrow, cap_summary.summary(' ', { visibility = { displayed = false } }))
-  device:emit_component_event(device.profile.components.tomorrow, cap_precipprob.probability({value=0, unit='%'}))
+  local initialize_current = {current={}}
+  initialize_current.current =    {  
+                                    summary     = {value=' '},
+                                    temperature = {value=20},
+                                    humidity    = {value=50},
+                                    mintemp     = {value=20},
+                                    maxtemp     = {value=20},
+                                    preciprate  = {value=0},
+                                    precipprob  = {value=0},
+                                    pressure    = {value=1010},
+                                    uv          = {value=0},
+                                    cloudcover  = {value=50},
+                                    dewpoint    = {value=20},
+                                    windspeed   = {value=0},
+                                    winddegrees = {value=0},
+                                    windgust    = {value=0}
+                                  }
+                        
+  emitter.emit_current(device, initialize_current)
+                        
+  local initialize_forecast = {forecast={}}
+  initialize_forecast.forecast =  {
+                                    summary     = {value=' '},
+                                    temperature = {value=20},
+                                    humidity    = {value=50},
+                                    mintemp     = {value=20},
+                                    maxtemp     = {value=20},
+                                    preciprate  = {value=0},
+                                    precipprob  = {value=0},
+                                    cloudcover  = {value=50},
+                                    windspeed   = {value=0},
+                                    windgust    = {value=0}
+                                  }
+          
+  emitter.emit_forecast(device, initialize_forecast)
   
 end
 
@@ -244,11 +297,20 @@ end
 
 
 -- Called when device was deleted via mobile app
-local function device_removed(_, device)
+local function device_removed(driver, device)
   
   log.warn(device.id .. ": " .. device.device_network_id .. "> removed")
   
-  initialized = false
+  local periodic_timer = device:get_field('periodictimer')
+  if periodic_timer then
+    driver:cancel_timer(periodic_timer)
+  end
+  
+  local device_list = driver:get_devices()
+  
+  if #device_list == 0 then
+    initialized = false
+  end
   
 end
 
@@ -260,14 +322,16 @@ local function handler_driverchanged(driver, device, event, args)
 end
 
 
+-- Called when driver is being shut down either for reinstall or deletion
 local function shutdown_handler(driver, event)
 
   log.info ('*** Driver being shut down ***')
-  
+  -- assume Edge destroys all outstanding timers & sockets
 
 end
 
 
+-- Called when user changes device settings preferences
 local function handler_infochanged (driver, device, event, args)
 
   log.debug ('Info changed handler invoked')
@@ -276,6 +340,8 @@ local function handler_infochanged (driver, device, event, args)
   if args.old_st_store.preferences then
     
      -- Examine each preference setting to see if it changed 
+    
+    local restarttimer = false
     
     if args.old_st_store.preferences.proxyaddr ~= device.preferences.proxyaddr then
       
@@ -286,57 +352,32 @@ local function handler_infochanged (driver, device, event, args)
       end
       
     elseif args.old_st_store.preferences.autorefresh ~= device.preferences.autorefresh then
-      if device.preferences.autorefresh == 'disabled' and periodic_timer then
-        driver:cancel_timer(periodic_timer)
-        periodic_timer = nil
+      if device.preferences.autorefresh == 'disabled' and device:get_field('periodictimer') then
+        driver:cancel_timer(device:get_field('periodictimer'))
+        device:set_field('periodictimer', nil)
       elseif device.preferences.autorefresh == 'enabled' then
-        if periodic_timer then                                          -- just in case
-          driver:cancel_timer(periodic_timer)
-        end
-        periodic_timer = driver:call_on_schedule(device.preferences.refreshrate * 60, refresh_data, 'Refresh timer')
+        restarttimer = true
       end
     
     elseif args.old_st_store.preferences.refreshrate ~= device.preferences.refreshrate then
       if device.preferences.autorefresh == 'enabled' then
-        if periodic_timer then
-          driver:cancel_timer(periodic_timer)
-        end
-        periodic_timer = driver:call_on_schedule(device.preferences.refreshrate * 60, refresh_data, 'Refresh timer')
+        restarttimer = true
       end
     end 
-  else
-    log.warn ('Old preferences missing')
+    
+    if restarttimer then; restart_timer(driver, device); end
+    
   end  
      
 end
 
 
--- Create Weather Device
+-- Called whenever 'Scan for nearby devices' was initiated by user from mobile app
 local function discovery_handler(driver, _, should_continue)
   
   if not initialized then
   
-    log.info("Creating Web Request device")
-    
-    local MFG_NAME = 'SmartThings Community'
-    local VEND_LABEL = 'Edge Weather'
-    local MODEL = 'edgeweatherv1'
-    local ID = 'ds_weather' .. '_' .. socket.gettime()
-    local PROFILE = 'weather.v1'
-
-    -- Create master device
-	
-		local create_device_msg = {
-																type = "LAN",
-																device_network_id = ID,
-																label = VEND_LABEL,
-																profile = PROFILE,
-																manufacturer = MFG_NAME,
-																model = MODEL,
-																vendor_provided_label = VEND_LABEL,
-															}
-												
-		assert (driver:try_create_device(create_device_msg), "failed to create weather device")
+    create_device(driver)
     
     log.debug("Exiting device creation")
     
@@ -362,13 +403,18 @@ thisDriver = Driver("thisDriver", {
   driver_lifecycle = shutdown_handler,
   capability_handlers = {
   
+    [cap_createdev.ID] = {
+      [cap_createdev.commands.push.NAME] = handle_createdev,
+    },
+    [capabilities.refresh.ID] = {
+      [capabilities.refresh.commands.refresh.NAME] = handle_refresh,
+    },
     [cap_refresh.ID] = {
       [cap_refresh.commands.push.NAME] = handle_refresh,
     },
-
   }
 })
 
-log.info ('Weather Driver v0.1 Started')
+log.info ('Weather Driver v0.5 Started')
 
 thisDriver:run()

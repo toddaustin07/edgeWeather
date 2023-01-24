@@ -2,7 +2,7 @@
     "dashboard": {
         "states": [
             {
-                "label": "{{wSpeed.value}}{{wSpeed.unit}}"
+                "label": "{{windgust.value}}{{windgust.unit}}"
             }
         ],
         "actions": []
@@ -16,8 +16,8 @@
                     0,
                     80
                 ],
-                "unit": "wSpeed.unit",
-                "value": "wSpeed.value",
+                "unit": "windgust.unit",
+                "value": "windgust.value",
                 "valueType": "number"
             }
         }
@@ -28,9 +28,9 @@
                 "label": "Wind Speed",
                 "displayType": "numberField",
                 "numberField": {
-                    "value": "wSpeed.value",
+                    "value": "windgust.value",
                     "valueType": "number",
-                    "unit": "wSpeed.unit",
+                    "unit": "windgust.unit",
                     "range": [
                         0,
                         80
@@ -40,6 +40,6 @@
         ],
         "actions": []
     },
-    "id": "partyvoice23922.windspeed5",
+    "id": "partyvoice23922.windgust",
     "version": 1
 }

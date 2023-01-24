@@ -19,75 +19,93 @@
 --]]
 
 local capabilities = require "st.capabilities"
-local stutils = require "st.utils"
-local common = require "common"
+local json = require "dkjson"
 local log = require "log"
 
-local function update_current(device, data)
 
-  device:emit_component_event(device.profile.components.main, cap_summary.summary(data.currently.summary))
-  
-  local temp = data.currently.temperature
-  local unit = 'C'
-  
-  if device.preferences.rtempunit == 'fahrenheit' then
-    unit = 'F'
-  end
-  device:emit_component_event(device.profile.components.main, capabilities.temperatureMeasurement.temperature({value = temp, unit=unit}))
-  
-  device:emit_component_event(device.profile.components.main, capabilities.relativeHumidityMeasurement.humidity(data.currently.humidity * 100))
-  
-  device:emit_component_event(device.profile.components.main, cap_precip.precip({value=data.currently.precipIntensity, unit='mm/hr'}))
-  device:emit_component_event(device.profile.components.main, cap_precipprob.probability(data.currently.precipProbability))
-  
-  local precip
-  if data.currently.precipIntensity == 0 then
-    precip = 'none'
-  elseif data.currently.precipIntensity > 0 and data.currently.precipIntensity < 2 then
-    precip = 'light'
-  
-  elseif data.currently.precipIntensity >= 2 and data.currently.precipIntensity <= 10 then
-    precip = 'moderate'
-  
-  elseif data.currently.precipIntensity > 10 and data.currently.precipIntensity < 50 then
-    precip = 'heavy'
-    
-  elseif data.currently.precipIntensity >= 50 then
-    precip = 'violent'
-  end
-  
-  device:emit_component_event(device.profile.components.main, capabilities.precipitationSensor.precipitationIntensity(precip))
-  
-  device:emit_component_event(device.profile.components.main, capabilities.atmosphericPressureMeasurement.atmosphericPressure(data.currently.pressure/10))
-  device:emit_component_event(device.profile.components.main, cap_barometer.pressure({value=data.currently.pressure, unit='mB'}))
-  
-  device:emit_component_event(device.profile.components.main, capabilities.ultravioletIndex.ultravioletIndex(data.currently.uvIndex))
-  device:emit_component_event(device.profile.components.main, cap_cloudcover.cloudcover({value=data.currently.cloudCover*100, unit='%'}))
-  
-  local dewpoint = data.currently.dewPoint
-  if device.preferences.rtempunit == 'celsius' and device.preferences.dtempunit == 'fahrenheit' then
-    dewpoint = math.floor(stutils.c_to_f(dewpoint))
-  elseif device.preferences.rtempunit == 'fahrenheit' and device.preferences.dtempunit == 'celsius' then
-    dewpoint = math.floor(stutils.f_to_c(dewpoint))
-  end
-  device:emit_component_event(device.profile.components.main, cap_dewpoint.dewpoint(dewpoint))
-  
-  local windval, windunit = common.convert_wind(data.currently.windSpeed, device.preferences.rwindunit, device.preferences.dwindunit)
-  log.debug ('windval:', windval)
-  device:emit_component_event(device.profile.components.main, cap_windspeed.wSpeed({value=windval, unit=windunit}))
+local function modify_current_url(current_url)
 
-  device:emit_component_event(device.profile.components.main, cap_windbearing.windbearing(data.currently.windBearing))
+  return current_url
+
+end
+
+
+local function update_current(device, weatherdata)
+
+  local weathertable = {}
+  weathertable.current = {}
+
+  local data, pos, err = json.decode (weatherdata, 1, nil)
+
+  weathertable.current.summary = {value=data.currently.summary}
+  weathertable.current.temperature = {value=data.currently.temperature}
+  weathertable.current.humidity = {value=data.currently.humidity * 100}
+  weathertable.current.preciprate = {value=data.currently.precipIntensity}
+  weathertable.current.precipprob = {value=data.currently.precipProbability*100}
+  weathertable.current.pressure = {value=data.currently.pressure}
+  weathertable.current.uv = {value=data.currently.uvIndex}
+  weathertable.current.cloudcover = {value=data.currently.cloudCover*100}
+  weathertable.current.dewpoint = {value=data.currently.dewPoint}
+  weathertable.current.windspeed = {value=data.currently.windSpeed}
+  
+  local winddir = data.currently.windBearing
+  if type(winddir) ~= 'number' then; winddir = 0; end
+  weathertable.current.winddegrees = {value=winddir}
+  
+  weathertable.current.mintemp = {value=-999}
+  weathertable.current.maxtemp = {value=-999}
+  weathertable.current.windgust = {value=0}
+  
+  return weathertable
   
 end
 
-local function update_forecast(device, data)
+local function update_forecast(device, weatherdata)
 
-  device:emit_component_event(device.profile.components.tomorrow, cap_summary.summary(data.daily.data[1].summary))
-  device:emit_component_event(device.profile.components.tomorrow, cap_precipprob.probability(data.daily.data[1].precipProbability))
+  local weathertable = {}
+  weathertable.forecast = {}
+  
+  local data, pos, err = json.decode (weatherdata, 1, nil)
 
+  local dailylist = data.daily.data
+  
+  local curdayofweek = os.date('%c', data.currently.time):match('(%a+) ')
+  log.debug ('current weekday: ', curdayofweek)
+  
+  local nextweekday = {
+                        ['Mon'] = 'Tue',
+                        ['Tue'] = 'Wed',
+                        ['Wed'] = 'Thu',
+                        ['Thu'] = 'Fri',
+                        ['Fri'] = 'Sat',
+                        ['Sat'] = 'Sun',
+                        ['Sun'] = 'Mon'
+                      }
+  
+  for _, item in ipairs(dailylist) do
+    log.debug ('found weekday: ', os.date('%c', item.time):match('(%a+) '))
+    
+    if os.date('%c', item.time):match('(%a+) ') == nextweekday[curdayofweek] then
+
+      weathertable.forecast.summary = {value=item.summary}
+      weathertable.forecast.temperature = {value=(tonumber(item.temperatureHigh) + tonumber(item.temperatureLow) / 2)}
+      weathertable.forecast.humidity = {value=item.humidity * 100}
+      weathertable.forecast.preciprate = {value=item.precipIntensity}
+      weathertable.forecast.precipprob = {value=item.precipProbability*100}
+      weathertable.forecast.cloudcover = {value=item.cloudCover*100}
+      weathertable.forecast.windspeed = {value=item.windSpeed}
+      
+      weathertable.forecast.mintemp = {value=-999}
+      weathertable.forecast.maxtemp = {value=-999}
+      weathertable.forecast.windgust = {value=0}
+      
+      return weathertable
+    end
+  end
 end
 
 return {
+  modify_current_url = modify_current_url,
   update_current = update_current,
   update_forecast = update_forecast,
 }

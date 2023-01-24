@@ -2,7 +2,7 @@
     "dashboard": {
         "states": [
             {
-                "label": "{{wSpeed.value}}{{wSpeed.unit}}"
+                "label": "{{winddeg.value}}{{winddeg.unit}}"
             }
         ],
         "actions": []
@@ -14,10 +14,10 @@
             "slider": {
                 "range": [
                     0,
-                    80
+                    359
                 ],
-                "unit": "wSpeed.unit",
-                "value": "wSpeed.value",
+                "unit": "winddeg.unit",
+                "value": "winddeg.value",
                 "valueType": "number"
             }
         }
@@ -25,21 +25,21 @@
     "automation": {
         "conditions": [
             {
-                "label": "Wind Speed",
+                "label": "Wind Direction - compass",
                 "displayType": "numberField",
                 "numberField": {
-                    "value": "wSpeed.value",
+                    "value": "winddeg.value",
                     "valueType": "number",
-                    "unit": "wSpeed.unit",
+                    "unit": "winddeg.unit",
                     "range": [
                         0,
-                        80
+                        359
                     ]
                 }
             }
         ],
         "actions": []
     },
-    "id": "partyvoice23922.windspeed5",
+    "id": "partyvoice23922.winddirdeg",
     "version": 1
 }

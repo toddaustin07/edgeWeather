@@ -1,0 +1,25 @@
+id: partyvoice23922.barometer2
+version: 1
+status: proposed
+name: barometer2
+ephemeral: false
+attributes:
+  pressure:
+    schema:
+      type: object
+      properties:
+        value:
+          type: number
+          minimum: 0
+          maximum: 1090
+        unit:
+          type: string
+          enum:
+            - mbar
+            - kPa
+            - inHg
+      additionalProperties: false
+      required:
+        - value
+    enumCommands: []
+commands: {}

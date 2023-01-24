@@ -1,0 +1,116 @@
+{
+    "dashboard": {
+        "states": [
+            {
+                "label": "{{direction.value}}"
+            }
+        ],
+        "actions": []
+    },
+    "detailView": [
+        {
+            "label": "{{i18n.label}}",
+            "displayType": "state",
+            "state": {
+                "label": "{{direction.value}}"
+            }
+        }
+    ],
+    "automation": {
+        "conditions": [
+            {
+                "label": "Wind Direction",
+                "displayType": "list",
+                "list": {
+                    "alternatives": [
+                        {
+                            "key": "N",
+                            "value": "N",
+                            "type": "active"
+                        },
+                        {
+                            "key": "NNE",
+                            "value": "NNE",
+                            "type": "active"
+                        },
+                        {
+                            "key": "NE",
+                            "value": "NE",
+                            "type": "active"
+                        },
+                        {
+                            "key": "ENE",
+                            "value": "ENE",
+                            "type": "active"
+                        },
+                        {
+                            "key": "E",
+                            "value": "E",
+                            "type": "active"
+                        },
+                        {
+                            "key": "ESE",
+                            "value": "ESE",
+                            "type": "active"
+                        },
+                        {
+                            "key": "SE",
+                            "value": "SE",
+                            "type": "active"
+                        },
+                        {
+                            "key": "SSE",
+                            "value": "SSE",
+                            "type": "active"
+                        },
+                        {
+                            "key": "S",
+                            "value": "S",
+                            "type": "active"
+                        },
+                        {
+                            "key": "SSW",
+                            "value": "SSW",
+                            "type": "active"
+                        },
+                        {
+                            "key": "SW",
+                            "value": "SW",
+                            "type": "active"
+                        },
+                        {
+                            "key": "WSW",
+                            "value": "WSW",
+                            "type": "active"
+                        },
+                        {
+                            "key": "W",
+                            "value": "W",
+                            "type": "active"
+                        },
+                        {
+                            "key": "WNW",
+                            "value": "WNW",
+                            "type": "active"
+                        },
+                        {
+                            "key": "NW",
+                            "value": "NW",
+                            "type": "active"
+                        },
+                        {
+                            "key": "NNW",
+                            "value": "NNW",
+                            "type": "active"
+                        }
+                    ],
+                    "value": "direction.value",
+                    "valueType": "string"
+                }
+            }
+        ],
+        "actions": []
+    },
+    "id": "partyvoice23922.winddirection2",
+    "version": 1
+}

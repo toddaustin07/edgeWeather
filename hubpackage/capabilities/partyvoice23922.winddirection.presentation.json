@@ -5,10 +5,10 @@
     },
     "detailView": [
         {
-            "label": "{{i18n.label}}",
+            "label": "Wind Direction",
             "displayType": "state",
             "state": {
-                "label": "{{summary.value}}"
+                "label": "{{direction.value}}"
             }
         }
     ],
@@ -16,6 +16,6 @@
         "conditions": [],
         "actions": []
     },
-    "id": "partyvoice23922.summary",
+    "id": "partyvoice23922.winddirection",
     "version": 1
 }

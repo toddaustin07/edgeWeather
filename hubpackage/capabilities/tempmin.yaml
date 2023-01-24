@@ -1,0 +1,25 @@
+id: partyvoice23922.tempmin
+version: 1
+status: proposed
+name: tempmin
+ephemeral: false
+attributes:
+  mintemp:
+    schema:
+      type: object
+      properties:
+        value:
+          type: number
+          minimum: -130
+          maximum: 150
+        unit:
+          type: string
+          enum:
+            - F
+            - C
+      additionalProperties: false
+      required:
+        - value
+        - unit
+    enumCommands: []
+commands: {}

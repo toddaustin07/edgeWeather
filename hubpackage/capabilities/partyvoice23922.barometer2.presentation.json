@@ -2,7 +2,7 @@
     "dashboard": {
         "states": [
             {
-                "label": "{{wSpeed.value}}{{wSpeed.unit}}"
+                "label": "{{pressure.value}}{{pressure.unit}}"
             }
         ],
         "actions": []
@@ -10,36 +10,31 @@
     "detailView": [
         {
             "label": "{{i18n.label}}",
-            "displayType": "slider",
-            "slider": {
-                "range": [
-                    0,
-                    80
-                ],
-                "unit": "wSpeed.unit",
-                "value": "wSpeed.value",
-                "valueType": "number"
+            "displayType": "state",
+            "state": {
+                "label": "{{pressure.value}}",
+                "unit": "pressure.unit"
             }
         }
     ],
     "automation": {
         "conditions": [
             {
-                "label": "Wind Speed",
+                "label": "Atmospheric Pressure",
                 "displayType": "numberField",
                 "numberField": {
-                    "value": "wSpeed.value",
+                    "value": "pressure.value",
                     "valueType": "number",
-                    "unit": "wSpeed.unit",
+                    "unit": "pressure.unit",
                     "range": [
                         0,
-                        80
+                        1040
                     ]
                 }
             }
         ],
         "actions": []
     },
-    "id": "partyvoice23922.windspeed5",
+    "id": "partyvoice23922.barometer2",
     "version": 1
 }

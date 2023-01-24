@@ -1,0 +1,25 @@
+id: partyvoice23922.windgust
+version: 1
+status: proposed
+name: windgust
+ephemeral: false
+attributes:
+  windgust:
+    schema:
+      type: object
+      properties:
+        value:
+          type: number
+        unit:
+          type: string
+          enum:
+            - mph
+            - km/h
+            - kn
+            - m/s
+          default: m/s
+      additionalProperties: false
+      required:
+        - value
+    enumCommands: []
+commands: {}
