@@ -1,6 +1,6 @@
 # edgeWeather
 ## Overview
-This SmartThings Edge driver provides weather data from select weather data sources (currently US Government & Dark Sky).  It requires no SmartApp, however it does require either my **Edge Bridge Server** or a standard **Proxy server**[^1] running on a computer on your network.  This provides the linkage for the Edge driver to reach internet endpoints which otherwise are not available to Edge drivers.  
+This SmartThings Edge driver creates a SmartThings device that provides weather data from select weather data sources (currently US Government & Dark Sky).  It requires no SmartApp, however it does require either my **Edge Bridge Server** or a standard **Proxy server**[^1] running on a computer on your network.  This provides the linkage for the Edge driver to reach internet endpoints which otherwise are not available to Edge drivers.  
 
 [^1]: Due to a restriction in the current Edge platform implementation, reaching **HTTPS**-based addresses from Edge drivers is not supported using a standard proxy server.  Therefore, if the weather data source is only available via https and not http, then my Edge Bridge Server *must* be used.
 
@@ -20,10 +20,16 @@ Currently, the edgeWeather driver provides 2 options for weather data, however i
   Download and run the Edge Bridge Server that meets your needs:
 
     * [Windows computer](https://github.com/toddaustin07/edgebridge/blob/main/edgebridge.exe)
+      
+      Open a command prompt window, navigate to the folder you downloaded the file to, and type 'edgebridge' and press enter.
 
     * [Linux or Mac (Python 3.x required)](https://github.com/toddaustin07/edgebridge/blob/main/edgebridge.py)
+      
+      Open a terminal window, navigate to the directory you downloaded the file to, and type 'python3 edgebridge.py' and press enter.
 
     * [Raspberry Pi](https://github.com/toddaustin07/edgebridge/blob/main/edgebridge4pi)
+      
+      Open a terminal window, navigate to the directory you downloaded the file to, and type 'chmod +x edgebridge4pi' and press enter (this makes the downloaded file executable).  Then to run it, type  './edgebridge4pi' and press enter.
 
   Alternatively, install a standard Proxy server such as [Privoxy](https://www.howtogeek.com/683971/how-to-use-a-raspberry-pi-as-a-proxy-server-with-privoxy/).
   
@@ -53,7 +59,7 @@ All data elements are available to automation routines, with the exception of Su
 * Probability of Precipitation
 * Summary
 ## Installation & Configuration
-The driver is currently available on my [test channel](https://bestow-regional.api.smartthings.com/invite/Q1jP7BqnNNlL).  Enroll your hub and select edgeWeather from the list of drivers available to install.
+The driver is currently available on my [test channel](https://bestow-regional.api.smartthings.com/invite/Q1jP7BqnNNlL).  Enroll your hub and select **Edge Weather V1** from the list of drivers available to install.
 When the driver is available on your hub, initiate an *Add device / Scan for nearby devices* from the SmartThings mobile app.  A new device will be created and found in your *No room assigned* room.  Open the device to the device *Settings* screen (three vertical dot menu in upper right of Controls screen).
 
 ### Settings
@@ -103,3 +109,18 @@ Set this value to the wind speed units that is received from the weather data so
 
 #### Displayed Wind Speed Units
 Set this value to the wind speed units that you want to use for your location (m/sec, knots, km/hr, mph)
+
+### Usage
+#### Control screen
+After making any Settings changes, be sure to tap the **Refresh** button on the device Controls screen.
+
+Any fields that are blank or have 0 value may be due to no data available for that element in the received data.
+
+Forecast data shown for US Gov sources is always for the next day.  For Dark Sky sources, the forecast shown is for the next time period (morning/day/evening/overnight/etc).  This is arbitrary and may become a configurable setting in the future.
+
+Tap the **Refresh** button at any time to update the weather data, or use the Periodic Refresh option in device Settings to automatically update.
+
+#### Routines
+All data elements except Summary are available to include in an **IF** portion of an automation routine.
+
+There are no **THEN** actions you can perform on the weather device.
