@@ -1,6 +1,6 @@
 # edgeWeather
 ## Overview
-This SmartThings Edge driver creates a SmartThings device that provides weather data from select weather data sources (currently US Government & Dark Sky).  It requires no SmartApp, however it does require either my **Edge Bridge Server** or a standard **Proxy server**[^1] running on a computer on your network.  This provides the linkage for the Edge driver to reach internet endpoints which otherwise are not available to Edge drivers.  
+This SmartThings Edge driver creates a SmartThings device that provides weather data from select weather data sources (currently US Government, OpenWeather, FMI, and WeatherUnderground).  It requires no SmartApp, however it does require either my **Edge Bridge Server** or a standard **Proxy server**[^1] running on a computer on your network.  This provides the linkage for the Edge driver to reach internet endpoints which otherwise are not available to Edge drivers.  
 
 [^1]: Due to a restriction in the current Edge platform implementation, reaching **HTTPS**-based addresses from Edge drivers is not supported using a standard proxy server.  Therefore, if the weather data source is only available via https and not http, then my Edge Bridge Server *must* be used.
 
@@ -8,12 +8,12 @@ The [Edge Bridge Server](https://github.com/toddaustin07/edgebridge) is a simple
 
 
 ### Weather data sources
-Currently, the edgeWeather driver provides 2 options for weather data, however it has been designed to be able to easily add more sources.  Please request them in the SmartThings community or in the Issues tab here in Github.  Provide working URLs for current data and forecast that I can use to test; [email](mailto:rpi.smartthings@gmail.com) them to me if they contain personal account data.
+Currently, the edgeWeather driver provides 4 options for weather data, however it has been designed to be able to easily add more sources.  Please request them in the SmartThings community or in the Issues tab here in Github.  Provide working URLs for current data and forecast that I can use to test; [email](mailto:rpi.smartthings@gmail.com) them to me if they contain personal account data.
 
 ## Driver Pre-requisites
 * SmartThings hub that supports Edge
 * SmartThings ID
-* Existing Dark Sky account if that is what you want to use (no new accounts can be created as it is being sunset); US Government weather does not require an account
+* Weather source account, if applicable
 * An always-on computer on your local network with internet access
 * Edge Bridge Server or standard Proxy server[^1]
 
