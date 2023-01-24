@@ -38,7 +38,7 @@ Currently, the edgeWeather driver provides 4 options for weather data, however i
 * Select weather data source
 * Separate weather data URLs for current weather conditions and forecast
 * Automatically refresh on a given interval
-* Choice of displayed wind speed units: m/sec, knots, km/h, mph
+* Choice of displayed units for temperature, pressure, precip rate, windspeed and direction
 ### Data Elements
 Availability of each depends on weather data source.
 
@@ -145,9 +145,9 @@ Values can be refreshed at any time by using the 'swipe-down' gesture.
 
 After making any Settings changes, be sure to do a swipe-down gesture on the Controls screen to refresh the values.
 
-Any fields that are blank or have 0 value may be due to no data available for that element in the received data.
+Any fields that are blank or have 0 value may be due to no data available for that element from the weather source.
 
-If available forecast data is only available as hourly, then data shown is typically for around noon-2pm the next day.
+If forecast data is only available as hourly, then forecast data shown is typically for around noon-2pm the next day.
 
 Use the Periodic Refresh option in device Settings to automatically update.
 
