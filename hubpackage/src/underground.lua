@@ -142,8 +142,8 @@ local function update_forecast(device, weatherdata)
       log.debug (string.format('Using forecast index #%s', index))
       
       weathertable.forecast.temperature = {value=set0ifna(fc.temperature, index, 'temp')}
-      weathertable.forecast.mintemp = {value=set0ifna(data.temperatureMin, index, 'temp')}
-      weathertable.forecast.maxtemp = {value=set0ifna(data.temperatureMax, index, 'temp')}
+      weathertable.forecast.mintemp = {value=set0ifna(data.temperatureMin, 1, 'temp')}
+      weathertable.forecast.maxtemp = {value=set0ifna(data.temperatureMax, 1, 'temp')}
       weathertable.forecast.humidity = {value=set0ifna(fc.relativeHumidity, index)}
       weathertable.forecast.precipprob = {value=set0ifna(fc.precipChance, index)}
       weathertable.forecast.cloudcover = {value=set0ifna(fc.cloudCover, index)}
