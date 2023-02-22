@@ -1,0 +1,64 @@
+{
+    "dashboard": {
+        "states": [
+            {
+                "label": "{{mintemp.value}} {{mintemp.unit}}",
+                "alternatives": [
+                    {
+                        "key": "C",
+                        "value": "°C",
+                        "type": "active"
+                    },
+                    {
+                        "key": "F",
+                        "value": "°F",
+                        "type": "active"
+                    }
+                ]
+            }
+        ],
+        "actions": []
+    },
+    "detailView": [
+        {
+            "label": "{{i18n.label}}",
+            "displayType": "state",
+            "state": {
+                "label": "{{mintemp.value}}",
+                "unit": "mintemp.unit",
+                "alternatives": [
+                    {
+                        "key": "C",
+                        "value": "°C",
+                        "type": "active"
+                    },
+                    {
+                        "key": "F",
+                        "value": "°F",
+                        "type": "active"
+                    }
+                ]
+            }
+        }
+    ],
+    "automation": {
+        "conditions": [
+            {
+                "label": "Low Temperature",
+                "displayType": "numberField",
+                "numberField": {
+                    "value": "mintemp.value",
+                    "valueType": "number",
+                    "unit": "mintemp.unit",
+                    "range": [
+                        -20,
+                        120
+                    ]
+                }
+            }
+        ],
+        "actions": []
+    },
+    "id": "partyvoice23922.tempmin",
+    "version": 1
+}

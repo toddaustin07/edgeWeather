@@ -9,7 +9,7 @@
     },
     "detailView": [
         {
-            "label": "Probability of Precipitation",
+            "label": "{{i18n.label}}",
             "displayType": "slider",
             "slider": {
                 "range": [

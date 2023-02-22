@@ -1,0 +1,24 @@
+id: partyvoice23922.winddirdeg
+version: 1
+status: proposed
+name: winddirdeg
+ephemeral: false
+attributes:
+  winddeg:
+    schema:
+      type: object
+      properties:
+        value:
+          type: number
+          minimum: 0
+          maximum: 359
+        unit:
+          type: string
+          enum:
+            - °
+          default: °
+      additionalProperties: false
+      required:
+        - value
+    enumCommands: []
+commands: {}

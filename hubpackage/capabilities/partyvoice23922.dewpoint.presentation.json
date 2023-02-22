@@ -9,7 +9,7 @@
     },
     "detailView": [
         {
-            "label": "Dew Point",
+            "label": "{{i18n.label}}",
             "displayType": "slider",
             "slider": {
                 "range": [

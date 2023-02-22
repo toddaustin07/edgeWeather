@@ -22,8 +22,8 @@ local cosock = require "cosock"
 local socket = require "cosock.socket"
 local http = cosock.asyncify "socket.http"
 local https = cosock.asyncify "ssl.https"
-http.TIMEOUT = 3
-https.TIMEOUT = 3
+http.TIMEOUT = 8
+https.TIMEOUT = 8
 local ltn12 = require "ltn12"
 local log = require "log"
 
@@ -47,11 +47,18 @@ local function issue_request(device, req_method, req_url, sendbody)
     sethost = req_url
   elseif device.preferences.proxytype == 'edge' then
     sethost = req_url:match('forward%?url=(.+)$')
+  elseif device.preferences.proxytype == 'none' then
+    sethost = req_url:match('%?url=(.+)$')
   end
   
-  log.debug ('sethost:',sethost)
-  sethost = (sethost..'/'):match('://([^/]+)/')
-  log.debug ('Host=',sethost)
+  if sethost then
+    log.debug ('Weather URL:',sethost)
+    sethost = (sethost..'/'):match('://([^/]+)/')
+    log.debug ('\tHost=',sethost)
+  else
+    log.error ("Couldn't find weather URL host for:", req_url)
+    return false
+  end
   
   local sendheaders = {
                         ["Acccept"] = '*/*',

@@ -1,0 +1,226 @@
+name: weather.v1e
+components:
+  - id: main
+    capabilities:
+      - id: temperatureMeasurement
+        version: 1
+      - id: relativeHumidityMeasurement
+        version: 1
+      - id: partyvoice23922.dewpoint
+        version: 1
+      - id: partyvoice23922.preciprate
+        version: 1
+      - id: partyvoice23922.precipprob
+        version: 1
+      - id: partyvoice23922.barometer2
+        version: 1
+      - id: atmosphericPressureMeasurement
+        version: 1
+      - id: ultravioletIndex
+        version: 1
+      - id: partyvoice23922.cloudcover
+        version: 1
+      - id: partyvoice23922.windspeed5
+        version: 1
+      - id: partyvoice23922.winddirdeg
+        version: 1
+      - id: partyvoice23922.winddirection2
+        version: 1
+      - id: precipitationSensor
+        version: 1
+      - id: partyvoice23922.summary
+        version: 1
+      - id: partyvoice23922.refresh
+        version: 1
+    categories:
+      - name: Thermostat
+  - id: tomorrow
+    capabilities:
+      - id: temperatureMeasurement
+        version: 1
+      - id: relativeHumidityMeasurement
+        version: 1
+      - id: partyvoice23922.cloudcover
+        version: 1
+      - id: partyvoice23922.preciprate
+        version: 1
+      - id: precipitationSensor
+        version: 1
+      - id: partyvoice23922.precipprob
+        version: 1
+      - id: partyvoice23922.windspeed5
+        version: 1
+      - id: partyvoice23922.summary
+        version: 1
+  - id: utility
+    capabilities:
+      - id: partyvoice23922.createanother
+        version: 1
+metadata:
+  ocfDeviceType: oic.d.thermostat
+preferences:
+  - title: "Weather Source"
+    name: wsource
+    description: "Choose source"
+    required: true
+    preferenceType: enumeration
+    definition:
+      options:
+        darksky: "Dark Sky"
+        usgov: "US Gov"
+        fmi: "FMI"
+        openw: "OpenWeather"
+      default: openw
+  - title: "Current Weather URL"
+    name: url
+    description: "URL"
+    required: true
+    preferenceType: string
+    definition:
+      stringType: text
+      minLength: 5
+      default: "xxxxx"
+  - title: "Weather Forecast URL"
+    name: furl
+    description: "URL"
+    required: true
+    preferenceType: string
+    definition:
+      stringType: text
+      minLength: 5
+      default: "xxxxx"
+  - title: "Proxy Server Address"
+    name: proxyaddr
+    description: "IP:port"
+    required: true
+    preferenceType: string
+    definition:
+      stringType: text
+      minLength: 17
+      default: "http://192.168.1.n:nnnn"
+  - title: "Proxy Type"
+    name: proxytype
+    description: "Choose option"
+    required: true
+    preferenceType: enumeration
+    definition:
+      options:
+        generic: "Standard Proxy Server"
+        edge: "Edge Bridge Server"
+        none: "None"
+      default: generic
+  - title: "Periodic Refresh"
+    name: autorefresh
+    description: "Enable/disable"
+    required: true
+    preferenceType: enumeration
+    definition:
+      options:
+        enabled: "Enable auto refresh"
+        disabled: "No auto refresh"
+      default: disabled
+  - title: "Refresh Rate"
+    name: refreshrate
+    description: "Every n minutes"
+    required: false
+    preferenceType: integer
+    definition:
+      minimum: 5
+      maximum: 1440
+      default: 60
+  - title: "Received Temperature Units"
+    name: rtempunit
+    description: "Temperature Units"
+    required: true
+    preferenceType: enumeration
+    definition:
+      options:
+        celsius: "Celsius"
+        fahrenheit: "Fahrenheit"
+      default: celsius
+  - title: "Displayed Temperature Units"
+    name: dtempunit
+    description: "Temperature Units"
+    required: true
+    preferenceType: enumeration
+    definition:
+      options:
+        celsius: "Celsius"
+        fahrenheit: "Fahrenheit"
+      default: celsius
+  - title: "Received Pressure Units"
+    name: rpressureunit
+    description: "Select measurement"
+    required: true
+    preferenceType: enumeration
+    definition:
+      options:
+        mbar: "millibars (mbar)"
+        kpa: "kilopascal (kPa)"
+        inhg: "inches of mercury (inHg)"
+      default: mbar
+  - title: "Displayed Pressure Units"
+    name: dpressureunit
+    description: "Select measurement"
+    required: true
+    preferenceType: enumeration
+    definition:
+      options:
+        mbar: "millibars (mbar)"
+        kpa: "kilopascal (kPa)"
+        inhg: "inches of mercury (inHg)"
+      default: mbar
+  - title: "Received Precip Rate Units"
+    name: rprecipunit
+    description: "Select measurement"
+    required: true
+    preferenceType: enumeration
+    definition:
+      options:
+        mmhr: "Millimeters per hour"
+        inhr: "Inches per hour"
+      default: mmhr
+  - title: "Displayed Precip Rate Units"
+    name: dprecipunit
+    description: "Select measurement"
+    required: true
+    preferenceType: enumeration
+    definition:
+      options:
+        mmhr: "Millimeters per hour"
+        inhr: "Inches per hour"
+      default: mmhr
+  - title: "Received Wind Speed Units"
+    name: rwindunit
+    description: "Select measurement"
+    required: true
+    preferenceType: enumeration
+    definition:
+      options:
+        knots: "Knots"
+        mpsec: "Meters per second"
+        mph: "Miles per hour"
+        kph: "Kilometers per hour"
+      default: mpsec
+  - title: "Displayed Wind Speed Units"
+    name: dwindunit
+    description: "Select measurement"
+    required: true
+    preferenceType: enumeration
+    definition:
+      options:
+        knots: "Knots"
+        mpsec: "Meters per second"
+        mph: "Miles per hour"
+        kph: "Kilometers per hour"
+      default: mpsec
+  - title: "Wind Direction Abbreviations"
+    name: winddir
+    description: "Select option"
+    required: true
+    preferenceType: enumeration
+    definition:
+      options:
+        16dirs: "16 directions"
+        8dirs: "8 directions"
+      default: 16dirs

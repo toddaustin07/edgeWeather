@@ -2,7 +2,7 @@
     "dashboard": {
         "states": [
             {
-                "label": "{{wSpeed.value}}{{wSpeed.unit}}"
+                "label": "{{precip.value}}{{precip.unit}}"
             }
         ],
         "actions": []
@@ -10,27 +10,22 @@
     "detailView": [
         {
             "label": "{{i18n.label}}",
-            "displayType": "slider",
-            "slider": {
-                "range": [
-                    0,
-                    80
-                ],
-                "unit": "wSpeed.unit",
-                "value": "wSpeed.value",
-                "valueType": "number"
+            "displayType": "state",
+            "state": {
+                "label": "{{precip.value}}",
+                "unit": "precip.unit"
             }
         }
     ],
     "automation": {
         "conditions": [
             {
-                "label": "Wind Speed",
+                "label": "Precipitation Rate",
                 "displayType": "numberField",
                 "numberField": {
-                    "value": "wSpeed.value",
+                    "value": "precip.value",
                     "valueType": "number",
-                    "unit": "wSpeed.unit",
+                    "unit": "precip.unit",
                     "range": [
                         0,
                         80
@@ -40,6 +35,6 @@
         ],
         "actions": []
     },
-    "id": "partyvoice23922.windspeed5",
+    "id": "partyvoice23922.preciprate",
     "version": 1
 }

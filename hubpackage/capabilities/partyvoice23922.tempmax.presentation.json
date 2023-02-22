@@ -1,0 +1,64 @@
+{
+    "dashboard": {
+        "states": [
+            {
+                "label": "{{maxtemp.value}} {{maxtemp.unit}}",
+                "alternatives": [
+                    {
+                        "key": "C",
+                        "value": "°C",
+                        "type": "active"
+                    },
+                    {
+                        "key": "F",
+                        "value": "°F",
+                        "type": "active"
+                    }
+                ]
+            }
+        ],
+        "actions": []
+    },
+    "detailView": [
+        {
+            "label": "{{i18n.label}}",
+            "displayType": "state",
+            "state": {
+                "label": "{{maxtemp.value}}",
+                "unit": "maxtemp.unit",
+                "alternatives": [
+                    {
+                        "key": "C",
+                        "value": "°C",
+                        "type": "active"
+                    },
+                    {
+                        "key": "F",
+                        "value": "°F",
+                        "type": "active"
+                    }
+                ]
+            }
+        }
+    ],
+    "automation": {
+        "conditions": [
+            {
+                "label": "High Temperature",
+                "displayType": "numberField",
+                "numberField": {
+                    "value": "maxtemp.value",
+                    "valueType": "number",
+                    "unit": "maxtemp.unit",
+                    "range": [
+                        -20,
+                        120
+                    ]
+                }
+            }
+        ],
+        "actions": []
+    },
+    "id": "partyvoice23922.tempmax",
+    "version": 1
+}
