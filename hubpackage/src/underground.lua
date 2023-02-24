@@ -24,6 +24,9 @@ local log = require "log"
 
 local util = require "common"
 
+local MINMAXTEMPFC_NEXTDAYINDEX = 2
+
+
 local function modify_current_url(current_url)
 
   return current_url
@@ -91,6 +94,8 @@ local function update_current(device, weatherdata)
   
   weathertable.current.pressure = {value=getnumvalue(root, 'pressure')}
   
+  weathertable.current.lux = {value=getnumvalue(data.observations[1], 'solarRadiation')}
+  
   weathertable.current.uv = {value=getnumvalue(data.observations[1], 'uv')}
   
   weathertable.current.humidity = {value=getnumvalue(data.observations[1], 'humidity')}
@@ -131,28 +136,49 @@ local function update_forecast(device, weatherdata)
   
   if data.daypart[1] then
     local fc = data.daypart[1]
-    local index
+    local daypart_index
     for i=1, #fc.daypartName do
-      log.debug ('Scanning:', fc.daypartName[i])
-      if fc.daypartName[i] == 'Tomorrow' then; index = i; end
+      if fc.daypartName[i] == 'Tomorrow' then; daypart_index = i; end
     end
     
-    if index then
+    if daypart_index then
     
-      log.debug (string.format('Using forecast index #%s', index))
+      log.debug (string.format('Using daypart forecast index #%s', daypart_index))
       
-      weathertable.forecast.temperature = {value=set0ifna(fc.temperature, index, 'temp')}
-      weathertable.forecast.mintemp = {value=set0ifna(data.temperatureMin, index, 'temp')}
-      weathertable.forecast.maxtemp = {value=set0ifna(data.temperatureMax, index, 'temp')}
-      weathertable.forecast.humidity = {value=set0ifna(fc.relativeHumidity, index)}
-      weathertable.forecast.precipprob = {value=set0ifna(fc.precipChance, index)}
-      weathertable.forecast.cloudcover = {value=set0ifna(fc.cloudCover, index)}
-      weathertable.forecast.windspeed = {value=set0ifna(fc.windSpeed, index)}
+      weathertable.forecast.temperature = {value=set0ifna(fc.temperature, daypart_index, 'temp')}
+
+      
+      weathertable.forecast.humidity = {value=set0ifna(fc.relativeHumidity, daypart_index)}
+      weathertable.forecast.precipprob = {value=set0ifna(fc.precipChance, daypart_index)}
+      weathertable.forecast.cloudcover = {value=set0ifna(fc.cloudCover, daypart_index)}
+      weathertable.forecast.windspeed = {value=set0ifna(fc.windSpeed, daypart_index)}
       
       weathertable.forecast.summary = {value=' '}
       if fc.wxPhraseLong then
-        if fc.wxPhraseLong[index] then
-          weathertable.forecast.summary = {value=fc.wxPhraseLong[index]}
+        if fc.wxPhraseLong[daypart_index] then
+          weathertable.forecast.summary = {value=fc.wxPhraseLong[daypart_index]}
+        end
+      end
+      
+      log.debug('Curent Hub day (UTC):', os.date('%A'))
+      log.debug('FC data- validTimeLocal[1]:', data.validTimeLocal[1])
+
+      -- Determine the local time offset
+      local offset_sign, offset_hrs, offset_mins = data.validTimeLocal[1]:match('[%d%-]+T[%d%:]+([%+%-])(%d%d)(%d%d)$')
+      local offset_multiplier = tonumber(offset_sign .. '1')
+      local localtime_offset = (tonumber(offset_hrs) * 3600 + tonumber(offset_mins) * 60) * offset_multiplier
+      log.debug (string.format('Local time offset in seconds=%d', localtime_offset))
+      local tomorrow = os.date('%A', os.time() + localtime_offset + 86400)
+      log.debug ('Computed Tomorrow:', tomorrow)
+      
+      if data.dayOfWeek then
+        for i=1, #data.dayOfWeek do
+          if data.dayOfWeek[i] == tomorrow then
+            log.debug (string.format('Using d-o-w forecast index #%d for min/max temp', i))
+            weathertable.forecast.mintemp = {value=set0ifna(data.temperatureMin, i, 'temp')}
+            weathertable.forecast.maxtemp = {value=set0ifna(data.temperatureMax, i, 'temp')}
+            break
+          end
         end
       end
       

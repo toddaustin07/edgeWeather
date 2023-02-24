@@ -177,6 +177,11 @@ local function get_winddir(device, compass_reading)
 
   if device.preferences.winddir == '16dirs' then
 
+    local directions = {'N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW','N'}
+    
+    return directions[math.floor((compass_reading+11.25)/22.5)+1]
+
+    --[[
     if compass_reading == 0 then return ('N')
     elseif compass_reading > 0 and compass_reading < 45 then return ('NNE')
     elseif compass_reading == 45 then return ('NE')
@@ -194,9 +199,15 @@ local function get_winddir(device, compass_reading)
     elseif compass_reading == 315 then return ('NW')
     elseif compass_reading > 315 and compass_reading < 360 then return ('NNW')
     end
+    --]]
     
   else
+  
+    local directions = {'N','NE','E','SE','S','SW','W','NW','N'}
     
+    return directions[math.floor((compass_reading+22.25)/45)+1]
+    
+    --[[
     if compass_reading >= 0 and compass_reading <= 22.5 then return ('N')
     elseif compass_reading > 22.5 and compass_reading <= 67.5 then return ('NE')
     elseif compass_reading > 67.5 and compass_reading <= 112.5 then return ('E')
@@ -207,6 +218,7 @@ local function get_winddir(device, compass_reading)
     elseif compass_reading > 292.5 and compass_reading <= 337.5 then return ('NW')
     elseif compass_reading > 337.5 and compass_reading <= 359 then return ('N')
     end
+    --]]
   end
 end
 

@@ -35,6 +35,7 @@ local _usgov = require "usgov"
 local _fmi = require "fmi"
 local _openweather = require "openweather"
 local _underground = require "underground"
+local _flow = require "flow"
 
 local wmodule = {
                   ['darksky'] = _darksky,
@@ -42,12 +43,14 @@ local wmodule = {
                   ['fmi'] = _fmi,
                   ['openw'] = _openweather,
                   ['under'] = _underground,
+                  ['flow'] = _flow,
                 }
 
 
 -- Module variables
 local thisDriver
 local initialized = false
+local PROFILE = 'weather.v1i'
 
 -- Custom capabilities
 local cap_createdev = capabilities["partyvoice23922.createanother"]
@@ -165,7 +168,6 @@ local function create_device(driver)
   local VEND_LABEL = 'Edge Weather'
   local MODEL = 'edgeweatherv1'
   local ID = 'edge_weather' .. '_' .. socket.gettime()
-  local PROFILE = 'weather.v1g'
 
   -- Create device
 
@@ -228,9 +230,19 @@ local function device_init(driver, device)
   
   log.debug(device.id .. ": " .. device.device_network_id .. "> INITIALIZING")
 
-  device:try_update_metadata({profile='weather.v1g'})
-
   initialized = true
+
+  -- REMOVE FOLLOWING AT NEXT DRIVER UPDATE
+  device:try_update_metadata({profile = PROFILE})
+  local illum = device:get_latest_state('main', capabilities.illuminanceMeasurement.ID, capabilities.illuminanceMeasurement.illuminance.NAME)
+  local uv = device:get_latest_state('main', capabilities.ultravioletIndex.ID, capabilities.ultravioletIndex.ultravioletIndex.NAME)
+  if illum == nil then
+    device:emit_component_event(device.profile.components.main, capabilities.illuminanceMeasurement.illuminance(0))
+  end
+  if uv == nil then
+    device:emit_component_event(device.profile.components.main, capabilities.ultravioletIndex.ultravioletIndex(0))
+  end
+  ---------------------------------------------
   
   if (validate_address(device.preferences.proxyaddr)) and device.preferences.url ~= 'xxxxx' then
     refresh_device(device)
@@ -259,6 +271,7 @@ local function device_added (driver, device)
                                     preciprate  = {value=0},
                                     precipprob  = {value=0},
                                     pressure    = {value=1010},
+                                    lux         = {value=0},
                                     uv          = {value=0},
                                     cloudcover  = {value=50},
                                     dewpoint    = {value=20},
@@ -415,6 +428,6 @@ thisDriver = Driver("thisDriver", {
   }
 })
 
-log.info ('Weather Driver v0.5 Started')
+log.info ('Weather Driver v0.6 Started')
 
 thisDriver:run()

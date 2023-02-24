@@ -34,7 +34,6 @@ local cap_barometer = capabilities["partyvoice23922.barometer2"]
 local cap_cloudcover = capabilities["partyvoice23922.cloudcover"]
 local cap_dewpoint = capabilities["partyvoice23922.dewpoint"]
 local cap_windspeed = capabilities["partyvoice23922.windspeed5"]
-local cap_windbearing = capabilities["partyvoice23922.windbearing"]     -- deprecated
 local cap_winddirection = capabilities["partyvoice23922.winddirection2"]
 local cap_windcompass = capabilities["partyvoice23922.winddirdeg"]
 local cap_mintemp = capabilities["partyvoice23922.tempmin"]
@@ -150,6 +149,14 @@ local function _emit_preciprate(device, component, value)
   
 end
 
+
+local function _emit_precipprob(device, component, probvalue)
+
+  device:emit_component_event(component, cap_precipprob.probability({value=probvalue, unit='%'}))
+
+end
+
+
 local function _emit_windspeed(device, component, value, which)
 
   local windval, windunit = common.convert_wind(value, device.preferences.rwindunit, device.preferences.dwindunit)
@@ -160,6 +167,25 @@ local function _emit_windspeed(device, component, value, which)
   else
     device:emit_component_event(component, cap_windspeed.wSpeed({value=windval, unit=windunit}))
   end
+end
+
+local function _emit_dewpoint(device, component, dewpoint)
+
+  local dewpointval
+  local _dewpointval = dewpoint.value
+  local unit = 'C'
+  
+  if dewpoint.unit then
+    unit = dewpoint.unit
+  else
+    if device.preferences.rtempunit == 'fahrenheit' then; unit = 'F'; end
+  end
+  
+  -- Override if dewpoint not available (-999)
+  dewpointval, unit = _check_na(device, _dewpointval, unit)
+  
+  device:emit_component_event(component, capabilities.dewPoint.dewpoint({value=dewpointval, unit=unit}))
+
 end
 
 
@@ -186,7 +212,8 @@ local function emit_current(device, data)
   _emit_preciprate(device, device.profile.components.main, data.current.preciprate.value)
   
   -- Precip probability
-  device:emit_component_event(device.profile.components.main, cap_precipprob.probability({value=data.current.precipprob.value, unit='%'}))
+  _emit_precipprob(device, device.profile.components.main, data.current.precipprob.value)
+  --device:emit_component_event(device.profile.components.main, cap_precipprob.probability({value=data.current.precipprob.value, unit='%'}))
   
   -- Pressure
   local pressval, pressunit = common.convert_pressure(data.current.pressure.value, device.preferences.rpressureunit, device.preferences.dpressureunit)
@@ -200,36 +227,26 @@ local function emit_current(device, data)
   -- Cloud cover
   device:emit_component_event(device.profile.components.main, cap_cloudcover.cloudcover({value=data.current.cloudcover.value, unit='%'}))
   
-  -- Dewpoint
-  local dewpoint = data.current.dewpoint.value
-  local unit = 'C'
-  
-  if data.current.dewpoint.unit then
-    unit = data.current.dewpoint.unit
-  else
-    if device.preferences.rtempunit == 'fahrenheit' then; unit = 'F'; end
+  -- Illuminance
+  if device:supports_capability_by_id('illuminanceMeasurement') and data.current.lux then
+    device:emit_component_event(device.profile.components.main, capabilities.illuminanceMeasurement.illuminance(data.current.lux.value))
   end
   
-  -- Override if dewpoint not available (-999)
-  dewpoint, unit = _check_na(device, dewpoint, unit)
+  -- UV Index
+  if device:supports_capability_by_id('ultravioletIndex') and data.current.uv then
+    device:emit_component_event(device.profile.components.main, capabilities.ultravioletIndex.ultravioletIndex(data.current.uv.value))
+  end
   
-  device:emit_component_event(device.profile.components.main, capabilities.dewPoint.dewpoint({value=dewpoint, unit=unit}))
+  -- Dewpoint
+  _emit_dewpoint(device, device.profile.components.main, data.current.dewpoint)
   
   -- Wind speed
   _emit_windspeed(device, device.profile.components.main, data.current.windspeed.value)
   
   -- Wind direction
   
-  if device:supports_capability_by_id('partyvoice23922.windbearing', 'main') then
-  
-    local bearing = data.current.winddegrees.value + 180
-    if bearing > 359 then; bearing = bearing - 360; end
-    device:emit_component_event(device.profile.components.main, cap_windbearing.windbearing(bearing))
-  
-  else
     device:emit_component_event(device.profile.components.main, cap_windcompass.winddeg(data.current.winddegrees.value))
     device:emit_component_event(device.profile.components.main, cap_winddirection.direction(common.get_winddir(device, data.current.winddegrees.value)))
-  end
   
   -- Wind gust
   _emit_windspeed(device, device.profile.components.main, data.current.windgust.value, 'gust')
@@ -262,7 +279,8 @@ local function emit_forecast(device, data)
   _emit_preciprate(device, device.profile.components.tomorrow, data.forecast.preciprate.value)
   
   -- Precip probability
-  device:emit_component_event(device.profile.components.tomorrow, cap_precipprob.probability({value=data.forecast.precipprob.value, unit='%'}))
+  _emit_precipprob(device, device.profile.components.tomorrow, data.forecast.precipprob.value)
+  --device:emit_component_event(device.profile.components.tomorrow, cap_precipprob.probability({value=data.forecast.precipprob.value, unit='%'}))
 
   -- Wind speed
   _emit_windspeed(device, device.profile.components.tomorrow, data.forecast.windspeed.value)
@@ -275,4 +293,7 @@ end
 return  {
           emit_current = emit_current,
           emit_forecast = emit_forecast,
+          _emit_summary = _emit_summary,
+          _emit_precipprob = _emit_precipprob,
+          _emit_dewpoint = _emit_dewpoint,
         }

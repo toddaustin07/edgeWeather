@@ -1,12 +1,17 @@
-name: weather.v1c
+name: weather.v1i
 components:
   - id: main
+    label: Current Conditions
     capabilities:
       - id: temperatureMeasurement
         version: 1
       - id: relativeHumidityMeasurement
         version: 1
-      - id: partyvoice23922.dewpoint
+      - id: partyvoice23922.tempmin
+        version: 1
+      - id: partyvoice23922.tempmax
+        version: 1
+      - id: dewPoint
         version: 1
       - id: partyvoice23922.preciprate
         version: 1
@@ -16,29 +21,42 @@ components:
         version: 1
       - id: atmosphericPressureMeasurement
         version: 1
-      - id: ultravioletIndex
-        version: 1
       - id: partyvoice23922.cloudcover
         version: 1
+      - id: illuminanceMeasurement
+        version: 1
+      - id: ultravioletIndex
+        version: 1
+        config:
+          values:
+          - key: "ultravioletIndex.value"
+            range: [0, 11]
       - id: partyvoice23922.windspeed5
         version: 1
       - id: partyvoice23922.winddirdeg
         version: 1
       - id: partyvoice23922.winddirection2
         version: 1
+      - id: partyvoice23922.windgust
+        version: 1
       - id: precipitationSensor
         version: 1
       - id: partyvoice23922.summary
         version: 1
-      - id: partyvoice23922.refresh
+      - id: refresh
         version: 1
     categories:
       - name: Thermostat
   - id: tomorrow
+    label: Tomorrow's Forecast
     capabilities:
       - id: temperatureMeasurement
         version: 1
       - id: relativeHumidityMeasurement
+        version: 1
+      - id: partyvoice23922.tempmin
+        version: 1
+      - id: partyvoice23922.tempmax
         version: 1
       - id: partyvoice23922.cloudcover
         version: 1
@@ -49,6 +67,8 @@ components:
       - id: partyvoice23922.precipprob
         version: 1
       - id: partyvoice23922.windspeed5
+        version: 1
+      - id: partyvoice23922.windgust
         version: 1
       - id: partyvoice23922.summary
         version: 1
@@ -66,10 +86,12 @@ preferences:
     preferenceType: enumeration
     definition:
       options:
-        darksky: "Dark Sky"
+        openw: "OpenWeather"
         usgov: "US Gov"
+        under: "Weather Underground"
+        flow: "WeatherFlow Tempest"
         fmi: "FMI"
-      default: darksky
+      default: openw
   - title: "Current Weather URL"
     name: url
     description: "URL"
@@ -155,6 +177,7 @@ preferences:
     definition:
       options:
         mbar: "millibars (mbar)"
+        pa: "pascals (Pa)"
         kpa: "kilopascal (kPa)"
         inhg: "inches of mercury (inHg)"
       default: mbar
@@ -177,6 +200,7 @@ preferences:
     definition:
       options:
         mmhr: "Millimeters per hour"
+        mhr: "Meters per hour"
         inhr: "Inches per hour"
       default: mmhr
   - title: "Displayed Precip Rate Units"

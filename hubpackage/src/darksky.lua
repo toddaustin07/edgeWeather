@@ -37,6 +37,8 @@ local function update_current(device, weatherdata)
 
   local data, pos, err = json.decode (weatherdata, 1, nil)
 
+  if not data then; return; end
+
   weathertable.current.summary = {value=data.currently.summary}
   weathertable.current.temperature = {value=data.currently.temperature}
   weathertable.current.humidity = {value=data.currently.humidity * 100}
@@ -48,8 +50,10 @@ local function update_current(device, weatherdata)
   weathertable.current.dewpoint = {value=data.currently.dewPoint}
   weathertable.current.windspeed = {value=data.currently.windSpeed}
   
-  local winddir = data.currently.windBearing
-  if type(winddir) ~= 'number' then; winddir = 0; end
+  local winddir = data.currently.windBearing      -- it's not really bearing, it's direction
+  if type(winddir) ~= 'number' then
+    winddir = 0
+  end
   weathertable.current.winddegrees = {value=winddir}
   
   weathertable.current.mintemp = {value=-999}
@@ -66,6 +70,8 @@ local function update_forecast(device, weatherdata)
   weathertable.forecast = {}
   
   local data, pos, err = json.decode (weatherdata, 1, nil)
+  
+  if not data then; return; end
 
   local dailylist = data.daily.data
   

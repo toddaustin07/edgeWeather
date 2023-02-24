@@ -29,7 +29,7 @@ local function modify_current_url(current_url)
 
 end
 
-
+--[[
 local function getnumvalue(value, valtype)
 
   if value then
@@ -43,6 +43,48 @@ local function getnumvalue(value, valtype)
   end
 
 end
+--]]
+
+local function nodata(ftype)
+
+  if ftype == 'temp' then
+    return -999
+  else
+    return 0
+  end
+end
+
+local function getnumvalue(data, keystr, ftype)
+
+  local elementlist = {}
+  local check = data
+
+  for str in string.gmatch(keystr, "([^.]+)") do
+    check = check[str]
+    if not check then
+      return nodata(ftype)
+    end
+  end
+  
+  if type(check.value) == 'number' then
+    return check.value
+  else
+    return nodata(ftype)
+  end
+
+end
+
+local function getfcvalue(value, ftype)
+
+  if value then
+    if type(value) == 'number' then
+      return(value)
+    end
+  end
+  
+  return nodata(ftype)
+
+end
 
 
 local function update_current(device, weatherdata)
@@ -52,31 +94,32 @@ local function update_current(device, weatherdata)
 
   local data, pos, err = json.decode (weatherdata, 1, nil)
 
+  local root = data.properties
 
   weathertable.current.summary = {value=' '}
   
-  weathertable.current.temperature = {value=getnumvalue(data.properties.temperature.value, 'temp')}
+  weathertable.current.temperature = {value=getnumvalue(root, 'temperature', 'temp')}
   
-  weathertable.current.mintemp = {value=getnumvalue(data.properties.minTemperatureLast24Hours.value, 'temp')}
-  weathertable.current.maxtemp = {value=getnumvalue(data.properties.maxTemperatureLast24Hours.value, 'temp')}
+  weathertable.current.mintemp = {value=getnumvalue(root, 'minTemperatureLast24Hours', 'temp')}
+  weathertable.current.maxtemp = {value=getnumvalue(root, 'maxTemperatureLast24Hours', 'temp')}
   
-  weathertable.current.humidity = {value=getnumvalue(data.properties.relativeHumidity.value)}
+  weathertable.current.humidity = {value=getnumvalue(root,'relativeHumidity')}
   
   weathertable.current.precipprob = {value=0}
   
-  weathertable.current.preciprate = {value=getnumvalue(data.properties.precipitationLastHour.value)}
+  weathertable.current.preciprate = {value=getnumvalue(root, 'precipitationLastHour')}
   
-  weathertable.current.pressure = {value=getnumvalue(data.properties.barometricPressure.value)}
+  weathertable.current.pressure = {value=getnumvalue(root, 'barometricPressure')}
   
   weathertable.current.cloudcover = {value=0}
   
-  weathertable.current.dewpoint = {value=getnumvalue(data.properties.dewpoint.value), 'temp'}
+  weathertable.current.dewpoint = {value=getnumvalue(root, 'dewpoint', 'temp')}
   
-  weathertable.current.windspeed = {value=getnumvalue(data.properties.windSpeed.value)}
+  weathertable.current.windspeed = {value=getnumvalue(root, 'windSpeed')}
   
-  weathertable.current.winddegrees = {value=getnumvalue(data.properties.windDirection.value)}
+  weathertable.current.winddegrees = {value=getnumvalue(root, 'windDirection')}
   
-  weathertable.current.windgust = {value=getnumvalue(data.properties.windGust.value)}
+  weathertable.current.windgust = {value=getnumvalue(root, 'windGust')}
   
   return weathertable
   
@@ -100,7 +143,8 @@ local function update_forecast(device, weatherdata)
     if weekday[string.lower(forecast.name)] then
       
       weathertable.forecast.summary = {value=forecast.shortForecast}
-      weathertable.forecast.temperature = {value=getnumvalue(forecast.temperature, 'temp'), unit=forecast.temperatureUnit}
+      
+      weathertable.forecast.temperature = {value=getfcvalue(forecast.temperature, 'temp'), unit=forecast.temperatureUnit}
 
       local windspeedtext = forecast.windSpeed
       local wmin, wmax = windspeedtext:match('(%d+) to (%d+) mph')
@@ -112,7 +156,7 @@ local function update_forecast(device, weatherdata)
       else
         windspeed = 0
       end      
-      weathertable.forecast.windspeed = {value=windspeed}
+      weathertable.forecast.windspeed = {value=windspeed*1.60934}   -- convert back to k/hr for consistancy with observations data
 
       -- these values are not included in the received forecast data
       weathertable.forecast.mintemp = {value=-999}

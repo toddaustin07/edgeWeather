@@ -12,7 +12,7 @@
             "label": "{{i18n.label}}",
             "displayType": "state",
             "state": {
-                "label": "{{pressure.value}}",
+                "label": "{{pressure.value}} {{pressure.unit}}",
                 "unit": "pressure.unit"
             }
         }
