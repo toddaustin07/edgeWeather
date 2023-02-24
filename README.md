@@ -1,6 +1,13 @@
 # edgeWeather
 ## Overview
-This SmartThings Edge driver creates a SmartThings device that provides weather data from select weather data sources (currently US Government, OpenWeather, WeatherUnderground, WeatherFLow Tempest, and FMI).  It requires no SmartApp, however it does require either my **Edge Bridge Server** or a standard **Proxy server**[^1] running on a computer on your network.  This provides the linkage for the Edge driver to reach internet endpoints which otherwise are not available to Edge drivers.  
+This SmartThings Edge driver creates a SmartThings device that provides weather data from select weather data sources:
+* US Government
+* OpenWeather
+* WeatherUnderground
+* WeatherFLow Tempest
+* FMI
+
+This driver requires no SmartApp, however it does require either my **Edge Bridge Server** or a standard **Proxy server**[^1] running on a computer on your network.  This provides the linkage for the Edge driver to reach internet endpoints which otherwise are not available to Edge drivers.  
 
 [^1]: Due to a restriction in the current Edge platform implementation, reaching **HTTPS**-based addresses from Edge drivers is not supported using a standard proxy server.  Therefore, if the weather data source is only available via https and not http, then my Edge Bridge Server *must* be used.
 
