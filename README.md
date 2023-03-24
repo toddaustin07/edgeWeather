@@ -2,7 +2,7 @@
 ## Overview
 This SmartThings Edge driver creates a SmartThings device that provides weather data from select weather data sources:
 * US Government
-* OpenWeather
+* OpenWeather (V2 and V3)
 * WeatherUnderground
 * WeatherFLow Tempest
 * FMI
@@ -92,6 +92,7 @@ The complete URL to retrieve the current weather conditions.
 * https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::observations::weather::timevaluepair&place=helsinki
 * http://api.weather.gov/stations/KBAZ/observations/latest
 * https://api.weather.com/v2/pws/observations/current?stationId=XXXXXXX&format=json&units=e&apiKey=xxxxxxxxxxxxxxxxxxxxxxxxxx
+* https://api.openweathermap.org/data/3.0/onecall?lat=nn.nnnn&lon=-nnn.n&appid=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 * https://swd.weatherflow.com/swd/rest/observations/?device_id=xxxxxx&token=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 * https://api.darksky.net/forecast/<usertoken\>/<latitude\>,<longitude\>?units=si&exclude=minutely,hourly
 #### Weather Forecast URL
@@ -162,6 +163,22 @@ If forecast data is only available as hourly, then forecast data shown is typica
 
 Use the Periodic Refresh option in device Settings to automatically update.
 
+##### Precipitation field
+This field can have the following values:
+* If Preciptation Rate data is available...
+```
+Precip Rate
+ (mm/hr)              Value
+-------------       ----------
+     0               None
+  > 0, < 2           Light
+ >=2, <= 10          Moderate
+ >10, < 50           Heavy     
+   >=50              Violent
+```
+
+* If Probability of Preciptation > 30% -or- Summary field contains terms like rain, shower, drizzle, thunderstorm, snow, or mix, value will be 'Possible precipitation'
+* If none of the above, the value will be 'None'
 #### Routines
 All data elements except Summary are available to include in an **IF** portion of an automation routine.
 
