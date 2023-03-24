@@ -64,6 +64,7 @@ All data elements are available to automation routines, with the exception of Su
 * Wind speed
 * Wind Direction (degrees and abbreviations)
 * Wind gust
+* Precipitation
 * Summary
 #### Forecast
 * Temperature
@@ -74,6 +75,7 @@ All data elements are available to automation routines, with the exception of Su
 * Cloud cover
 * Wind speed
 * Wind gust
+* Precipitation
 * Summary
 ## Installation & Configuration
 The driver is currently available on my [test channel](https://bestow-regional.api.smartthings.com/invite/Q1jP7BqnNNlL).  Enroll your hub and select **Edge Weather V1** from the list of drivers available to install.
