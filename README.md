@@ -105,7 +105,7 @@ The complete URL to retrieve the weather forecast.  If the forecast data is cont
 ##### Examples
 * http://api.weather.gov/gridpoints/EWX/142,70/forecast
 * https://api.openweathermap.org/data/2.5/forecast?lat=nn.nnnn&lon=-nn.nnn&appid=xxxxxxxxxxxxxxxxxxxx
-* https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::forecast::hirlam::surface::point::timevaluepair&place=helsinki
+* https://opendata.fmi.fi/wfs?service=WFS&version=2.0.0&request=getFeature&storedquery_id=fmi::forecast::harmonie::surface::point::timevaluepair&place=helsinki
 * https://api.weather.com/v3/wx/forecast/daily/5day?postalKey=nnnnn:US&format=json&units=e&language=en-US&apiKey=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 * https://swd.weatherflow.com/swd/rest/better_forecast/?station_id=xxxxx&device_id=xxxxxx&token=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 
